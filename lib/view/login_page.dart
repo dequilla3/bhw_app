@@ -1,4 +1,5 @@
 import 'package:bhw_app/components/app_text_field.dart';
+import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final focusUserName = FocusNode();
   final focusPassword = FocusNode();
-  var _isLoading = true;
+  var _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +68,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       // doLogin();
+                      Navigator.of(context)
+                          .pushReplacementNamed(AppRoutes.mainPage);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
