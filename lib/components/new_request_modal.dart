@@ -1,10 +1,12 @@
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/data/model/user_request.dart';
+import 'package:bhw_app/provider/app_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:bhw_app/style/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class NewRequestModal extends StatefulWidget {
   const NewRequestModal({super.key});
@@ -19,7 +21,10 @@ class _NewRequestModalState extends State<NewRequestModal> {
 
   @override
   Widget build(BuildContext context) {
-    final appRepo = Provider.of<RequestProvider>(context);
+    const uuid = Uuid();
+    final requestProiver = Provider.of<RequestProvider>(context);
+    final appProvider = Provider.of<AppProvider>(context);
+
     String requestDetails = "";
 
     return GestureDetector(
@@ -45,8 +50,11 @@ class _NewRequestModalState extends State<NewRequestModal> {
                       // padding: const EdgeInsets.only(left: 20, right: 20),
                     ),
                     onPressed: () {
-                      appRepo.addRequest(
-                          UserRequest(1, requestDetails, isChecked, 'PENDING'));
+                      UserRequest userRequest = UserRequest(
+                          uuid.v1(), requestDetails, isChecked, 'PENDING');
+                      requestProiver.addRequest(userRequest);
+                      appProvider.createNewRequest(userRequest.details,
+                          userRequest.isEmergency, userRequest.status);
                       Navigator.pop(context);
                     },
                     child: const Text('Create'),

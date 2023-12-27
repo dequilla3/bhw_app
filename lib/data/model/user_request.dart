@@ -1,5 +1,5 @@
 class UserRequest {
-  final int id;
+  final String id;
   final String details;
   final bool isEmergency;
   final String status;
