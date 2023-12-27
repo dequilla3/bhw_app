@@ -8,14 +8,15 @@ class AppTextFieldExpandable extends StatelessWidget {
   final FocusNode? focusNode;
   final int? maxLines;
   final int? minLines;
-  const AppTextFieldExpandable(
-      {super.key,
-      this.hint,
-      this.controller,
-      this.onChange,
-      this.focusNode,
-      this.maxLines,
-      this.minLines});
+  const AppTextFieldExpandable({
+    super.key,
+    this.hint,
+    this.controller,
+    this.onChange,
+    this.focusNode,
+    this.maxLines,
+    this.minLines,
+  });
 
   @override
   Widget build(Object context) {
@@ -29,7 +30,7 @@ class AppTextFieldExpandable extends StatelessWidget {
       decoration: InputDecoration(
         isDense: true,
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.black87, fontSize: 12),
+        hintStyle: const TextStyle(color: Colors.black87, fontSize: 14),
         border: const OutlineInputBorder(),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.white),

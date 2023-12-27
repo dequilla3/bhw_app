@@ -1,6 +1,6 @@
-import 'package:bhw_app/view/pages/login_page.dart';
-import 'package:bhw_app/view/pages/main_page.dart';
-import 'package:bhw_app/view/screens/request_details_screen.dart';
+import 'package:bhw_app/pages/login_page.dart';
+import 'package:bhw_app/pages/main_page.dart';
+import 'package:bhw_app/pages/request_details_screen.dart';
 
 class AppRoutes {
   static const loginPage = '/';

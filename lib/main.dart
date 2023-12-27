@@ -1,9 +1,24 @@
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/provider/app_provider.dart';
+import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppProvider>(
+          create: (context) => AppProvider(),
+        ),
+        ChangeNotifierProvider<RequestProvider>(
+          create: (context) => RequestProvider(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,17 +1,16 @@
-import 'package:bhw_app/controller/request_controller.dart';
+import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class RequestDetailsScreen extends StatelessWidget {
   const RequestDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    RequestController requestController = Get.find();
+    final appRepo = Provider.of<RequestProvider>(context);
 
-    Widget renderRequestBadge() {
-      bool isEmerg = requestController.getUserRequest().isEmergency;
+    Widget renderRequestBadge(isEmerg) {
       return Padding(
         padding: const EdgeInsets.only(left: 16, top: 16),
         child: Container(
@@ -32,8 +31,7 @@ class RequestDetailsScreen extends StatelessWidget {
       );
     }
 
-    Widget renderApprovalBadge() {
-      String status = requestController.getUserRequest().status;
+    Widget renderApprovalBadge(status) {
       if (status == "PENDING") {
         return Padding(
           padding: const EdgeInsets.only(left: 8, top: 16),
@@ -105,15 +103,15 @@ class RequestDetailsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              renderRequestBadge(),
-              renderApprovalBadge(),
+              renderRequestBadge(appRepo.userRequest!.isEmergency),
+              renderApprovalBadge(appRepo.userRequest!.status),
             ],
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Text(requestController.getUserRequest().details),
+                Text(appRepo.userRequest!.details),
               ],
             ),
           ),
