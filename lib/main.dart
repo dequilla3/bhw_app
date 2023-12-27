@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
       ),
       initialRoute: '/',
-      routes: AppRoutes.pages,
+      routes: AppRoutes.routes,
     );
   }
 }

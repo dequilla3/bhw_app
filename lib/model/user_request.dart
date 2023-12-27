@@ -2,10 +2,10 @@ class UserRequest {
   final int id;
   final String details;
   final bool isEmergency;
-  final bool isApproved;
+  final String status;
 
-  UserRequest(this.id, this.details, this.isEmergency, this.isApproved);
+  UserRequest(this.id, this.details, this.isEmergency, this.status);
 
   factory UserRequest.fromJson(Map<String, dynamic> json) => UserRequest(
-      json['id'], json['details'], json['isEmergency'], json['isApproved']);
+      json['id'], json['details'], json['isEmergency'], json['status']);
 }
