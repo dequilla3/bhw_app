@@ -23,14 +23,15 @@ class AppTextFieldExpandable extends StatelessWidget {
     return TextField(
       maxLines: maxLines,
       minLines: minLines,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 12),
       onChanged: onChange,
       controller: controller,
       focusNode: focusNode,
       decoration: InputDecoration(
         isDense: true,
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.black87, fontSize: 14),
+        hintStyle: const TextStyle(color: Colors.black54, fontSize: 12),
+        fillColor: AppColors.bgLight,
         border: const OutlineInputBorder(),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.white),

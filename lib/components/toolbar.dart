@@ -10,24 +10,14 @@ class ToolBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: AppColors.bgLight,
       foregroundColor: Colors.black,
-      title: Row(
-        children: [
-          const Icon(
-            Icons.medication_rounded,
-            size: 36,
-            color: AppColors.font2,
-          ),
-          Text(
-            title ?? "",
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: AppColors.font2,
-            ),
-          ),
-        ],
+      title: Text(
+        title ?? "",
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w400,
+          color: AppColors.font2,
+        ),
       ),
       centerTitle: false,
       actions: actions,

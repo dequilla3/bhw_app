@@ -2,7 +2,6 @@ import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/pages/request_page.dart';
 import 'package:bhw_app/provider/request_provider.dart';
-import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +31,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ToolBar(
-        title: 'BHW ',
+        title: 'B H W',
         actions: [
           PopupMenuButton<Menus>(
             onSelected: (value) {
@@ -61,12 +60,13 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
-        indicatorColor: AppColors.primary,
+        // indicatorColor: AppColors.primary,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(

@@ -19,32 +19,28 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    return SizedBox(
-      height: height * 0.08,
-      child: TextField(
-        style: const TextStyle(fontSize: 14),
-        obscureText: isObscureText,
-        onChanged: onChange,
-        controller: controller,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          isDense: true,
-          labelText: hint,
-          labelStyle: const TextStyle(color: AppColors.font2, fontSize: 14),
-          border: const OutlineInputBorder(),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.primary.withOpacity(0.4),
-            ),
+    return TextField(
+      style: const TextStyle(fontSize: 14),
+      obscureText: isObscureText,
+      onChanged: onChange,
+      controller: controller,
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        isDense: true,
+        labelText: hint,
+        labelStyle: const TextStyle(color: AppColors.font2, fontSize: 14),
+        border: const OutlineInputBorder(),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.transparent,
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.primary,
-            ),
-          ),
-          filled: true,
         ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.transparent,
+          ),
+        ),
+        filled: true,
       ),
     );
   }

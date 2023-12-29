@@ -2,7 +2,7 @@ import 'package:bhw_app/data/model/user_request.dart';
 import 'package:bhw_app/data/service/service_base.dart';
 
 class UserRequestService extends ServiceBase {
-  Future<List<UserRequest>> getReuestFromLocalStorell() async {
+  Future<List<UserRequest>> getReuestFromLocalStore() async {
     List<UserRequest> reqs = [];
 
     final result = await getLocalStoreCollections('requests');

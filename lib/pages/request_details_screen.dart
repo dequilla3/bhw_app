@@ -96,7 +96,7 @@ class RequestDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text('Details'),
-        backgroundColor: AppColors.bgLight,
+        // backgroundColor: AppColors.bgLight,
         foregroundColor: AppColors.font2,
       ),
       body: Column(

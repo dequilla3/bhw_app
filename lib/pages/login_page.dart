@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(32),
             child: Column(
               children: [
-                SizedBox(height: height * 0.10),
+                const Spacer(),
                 Container(
                   height: height * 0.20,
                   decoration: const BoxDecoration(
@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: height * 0.05),
                 const Text(
                   'Hello, Welcome!',
                   style: TextStyle(
@@ -67,7 +66,9 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // doLogin();
+                      //TODO: doLogin();
+                      focusUserName.unfocus();
+                      focusPassword.unfocus();
                       Navigator.of(context)
                           .pushReplacementNamed(AppRoutes.mainPage);
                     },
@@ -91,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                const Spacer(),
               ],
             ),
           ),

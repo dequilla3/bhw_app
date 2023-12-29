@@ -35,80 +35,96 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
+  getScreenHeight(height) {
+    if (height > 900) {
+      return height * 0.85;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: height * 0.02),
-          SizedBox(
-            height: height * 0.75,
-            child: Consumer<RequestProvider>(
-              builder: (context, value, child) {
-                return Stack(
-                  children: [
-                    ListView.builder(
-                        itemCount: value.requests.length,
-                        itemBuilder: (context, index) {
-                          var request = value.requests[index];
-                          var isEmerg = request.isEmergency;
+    return Consumer<RequestProvider>(
+      builder: (context, value, child) {
+        return Stack(
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: height * 0.75,
+                  child: ListView.builder(
+                      itemCount: value.requests.length,
+                      itemBuilder: (context, index) {
+                        var request = value.requests[index];
+                        var isEmerg = request.isEmergency;
 
-                          return ListTile(
-                              onTap: () {
-                                value.userRequest = request;
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.requestDetailsRoute);
-                              },
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                    isEmerg ? Colors.red : Colors.green,
-                                child: isEmerg
-                                    ? const Text(
-                                        'EMERG',
-                                        style: TextStyle(fontSize: 10),
-                                      )
-                                    : const Text(
-                                        'NORM',
-                                        style: TextStyle(fontSize: 10),
-                                      ),
-                              ),
-                              title: Text(
-                                request.details,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.font2,
-                                ),
-                              ),
-                              trailing: _statusIcon(request.status));
-                        }),
-                    Positioned(
-                      bottom: 20,
-                      right: 20,
-                      child: FloatingActionButton(
-                        backgroundColor: AppColors.primary,
-                        onPressed: () {
-                          showModalBottomSheet(
-                            elevation: 1,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (context) {
-                              return const NewRequestModal();
-                            },
-                          );
-                        },
-                        child: const Icon(Icons.add),
-                      ),
-                    )
-                  ],
-                );
-              },
+                        return ListTile(
+                          onTap: () {
+                            Future.delayed(const Duration(milliseconds: 150),
+                                () {
+                              value.userRequest = request;
+                              Navigator.of(context)
+                                  .pushNamed(AppRoutes.requestDetailsRoute);
+                            });
+                          },
+                          leading: CircleAvatar(
+                            foregroundColor: Colors.white,
+                            backgroundColor: isEmerg
+                                ? const Color.fromARGB(255, 218, 96, 87)
+                                : Colors.blue,
+                            child: isEmerg
+                                ? const Text(
+                                    'EMERG',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  )
+                                : const Text(
+                                    'NORM',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                          ),
+                          isThreeLine: true,
+                          title: Text(DateFormat('yyyy-MM-dd')),
+                          subtitle: Text(
+                            request.details,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.font2,
+                            ),
+                          ),
+                          trailing: _statusIcon(request.status),
+                        );
+                      }),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: FloatingActionButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    elevation: 1,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (context) {
+                      return const NewRequestModal();
+                    },
+                  );
+                },
+                child: const Icon(Icons.add),
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 }

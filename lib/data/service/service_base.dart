@@ -1,9 +1,9 @@
-import 'package:bhw_app/provider/app_provider.dart';
+import 'package:localstore/localstore.dart';
 
 abstract class ServiceBase {
-  final AppProvider appProvider = AppProvider();
+  final Localstore db = Localstore.instance;
 
   getLocalStoreCollections(String collection) async {
-    return await appProvider.db.collection(collection).get();
+    return await db.collection(collection).get();
   }
 }
