@@ -7,7 +7,7 @@ class RequestProvider extends ProviderBase {
   UserRequest? userRequest;
 
   addRequest(UserRequest uReq) async {
-    requests.add(uReq);
+    requests.insert(0, uReq);
     // gets new id
     final docId = db.collection('requests').doc().id;
 // save the item
@@ -25,8 +25,7 @@ class RequestProvider extends ProviderBase {
     requests = [];
     List<UserRequest> requestsFromStore =
         await UserRequestService().getReuestFromLocalStore();
-    requests.addAll(requestsFromStore);
-
+    requests.addAll(requestsFromStore.reversed.toList());
     notifyListeners();
   }
 }

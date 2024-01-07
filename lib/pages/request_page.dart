@@ -3,6 +3,7 @@ import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class RequestPage extends StatefulWidget {
@@ -35,16 +36,8 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
-  getScreenHeight(height) {
-    if (height > 900) {
-      return height * 0.85;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-
     return Consumer<RequestProvider>(
       builder: (context, value, child) {
         return Stack(
@@ -52,8 +45,7 @@ class _RequestPageState extends State<RequestPage> {
             Column(
               children: [
                 const SizedBox(height: 8),
-                SizedBox(
-                  height: height * 0.75,
+                Expanded(
                   child: ListView.builder(
                       itemCount: value.requests.length,
                       itemBuilder: (context, index) {
@@ -89,7 +81,8 @@ class _RequestPageState extends State<RequestPage> {
                                   ),
                           ),
                           isThreeLine: true,
-                          title: Text(DateFormat('yyyy-MM-dd')),
+                          title: Text(
+                              DateFormat.yMd().format(request.dateCreated)),
                           subtitle: Text(
                             request.details,
                             overflow: TextOverflow.ellipsis,

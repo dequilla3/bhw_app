@@ -60,6 +60,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
+        
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (int index) {
           setState(() {
