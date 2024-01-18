@@ -15,13 +15,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  ScrollController? scrollController;
   Future<void> loadUser() async {
     context.read<UserProvider>().getUsers();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -38,6 +34,24 @@ class _UserPageState extends State<UserPage> {
             : FontAwesomeIcons.personDress,
         size: 11,
       );
+    }
+
+    void _scrollListener() {
+      if (scrollController!.position.extentAfter < 500) {
+        loadUser();
+      }
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      loadUser();
+    }
+
+    @override
+    void dispose() {
+      scrollController?.removeListener(_scrollListener);
+      super.dispose();
     }
 
     Widget getRoleIcon(String role) {
@@ -57,59 +71,66 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    return Consumer<UserProvider>(
-      builder: (context, value, child) {
-        return Stack(
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 8),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: value.users.length,
-                      itemBuilder: (context, index) {
-                        User user = value.users[index];
-
-                        return ListTile(
-                          onTap: () {},
-                          leading: CircleAvatar(
-                            foregroundColor: Colors.white,
-                            backgroundColor: getRandomColor(),
-                            child: Text(user.firstName[0].toUpperCase()),
-                          ),
-                          isThreeLine: true,
-                          title: Text(
-                            "${user.firstName} ${user.lastName}".toUpperCase(),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              getGenderIcon(user.gender),
-                              Text(
-                                " ${user.addressLine1}, ${user.addressLine2}",
-                              ),
-                            ],
-                          ),
-                          trailing: Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: getRoleIcon(user.role),
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.addUserPage);
-                  },
-                  child: const FaIcon(FontAwesomeIcons.plus)),
-            )
-          ],
-        );
+    return RefreshIndicator(
+      onRefresh: () {
+        return loadUser();
       },
+      child: Consumer<UserProvider>(
+        builder: (context, value, child) {
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: value.users.length,
+                        itemBuilder: (context, index) {
+                          User user = value.users[index];
+
+                          return ListTile(
+                            onTap: () {},
+                            leading: CircleAvatar(
+                              foregroundColor: Colors.white,
+                              backgroundColor: getRandomColor(),
+                              child: Text(user.firstName[0].toUpperCase()),
+                            ),
+                            isThreeLine: true,
+                            title: Text(
+                              "${user.firstName} ${user.lastName}"
+                                  .toUpperCase(),
+                            ),
+                            subtitle: Row(
+                              children: [
+                                getGenderIcon(user.gender),
+                                Text(
+                                  " ${user.addressLine1}, ${user.addressLine2}",
+                                ),
+                              ],
+                            ),
+                            trailing: Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: getRoleIcon(user.role),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoutes.addUserPage);
+                    },
+                    child: const FaIcon(FontAwesomeIcons.plus)),
+              )
+            ],
+          );
+        },
+      ),
     );
   }
 }
