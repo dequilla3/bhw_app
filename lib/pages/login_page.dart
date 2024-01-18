@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final focusUserName = FocusNode();
   final focusPassword = FocusNode();
-  var _isLoading = false;
+  final _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +69,13 @@ class _LoginPageState extends State<LoginPage> {
                       //TODO: doLogin();
                       focusUserName.unfocus();
                       focusPassword.unfocus();
-                      Navigator.of(context)
-                          .pushReplacementNamed(AppRoutes.mainPage);
+                      if (usernameController.text == "a") {
+                        Navigator.of(context)
+                            .pushReplacementNamed(AppRoutes.mainPage);
+                      } else {
+                        Navigator.of(context)
+                            .pushReplacementNamed(AppRoutes.requestPage);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,

@@ -1,5 +1,6 @@
 import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/provider/request_provider.dart';
+import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,9 @@ void main() {
       providers: [
         ChangeNotifierProvider<RequestProvider>(
           create: (context) => RequestProvider(),
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
         ),
       ],
       child: const MyApp(),
