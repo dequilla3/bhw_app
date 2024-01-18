@@ -20,6 +20,24 @@ class _UserPageState extends State<UserPage> {
     context.read<UserProvider>().getUsers();
   }
 
+  void scrollListener() {
+    if (scrollController!.position.extentAfter < 500) {
+      loadUser();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  @override
+  void dispose() {
+    scrollController?.removeListener(scrollListener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Color getRandomColor() {
@@ -34,24 +52,6 @@ class _UserPageState extends State<UserPage> {
             : FontAwesomeIcons.personDress,
         size: 11,
       );
-    }
-
-    void _scrollListener() {
-      if (scrollController!.position.extentAfter < 500) {
-        loadUser();
-      }
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      loadUser();
-    }
-
-    @override
-    void dispose() {
-      scrollController?.removeListener(_scrollListener);
-      super.dispose();
     }
 
     Widget getRoleIcon(String role) {

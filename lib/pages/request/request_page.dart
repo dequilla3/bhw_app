@@ -1,6 +1,6 @@
 import 'package:bhw_app/components/default_toolbar.dart';
-import 'package:bhw_app/components/new_request_modal.dart';
-import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/pages/request/new_request_modal.dart';
+import 'package:bhw_app/pages/request/request_details_screen.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -71,8 +71,16 @@ class _RequestPageState extends State<RequestPage> {
                               Future.delayed(const Duration(milliseconds: 150),
                                   () {
                                 value.userRequest = request;
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.requestDetailsRoute);
+                                // Navigator.of(context)
+                                //     .pushNamed(AppRoutes.requestDetailsRoute);
+                                showModalBottomSheet(
+                                  elevation: 1,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) {
+                                    return const RequestDetailsScreen();
+                                  },
+                                );
                               });
                             },
                             leading: CircleAvatar(

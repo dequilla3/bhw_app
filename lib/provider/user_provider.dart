@@ -1,6 +1,7 @@
 import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/data/service/user/add_user_service.dart';
 import 'package:bhw_app/data/service/user/get_user_service.dart';
+import 'package:bhw_app/data/service/user/login_user_service.dart';
 import 'package:bhw_app/provider/provider_base.dart';
 
 class UserProvider extends ProviderBase {
@@ -25,5 +26,10 @@ class UserProvider extends ProviderBase {
 
   Future<Map<String, dynamic>> addUser(User user) async {
     return await AddUserService(user: user).call();
+  }
+
+  Future<Map<String, dynamic>> auth(String username, String password) async {
+    return await LoginUserService(username: username, password: password)
+        .call();
   }
 }

@@ -2,6 +2,7 @@ import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: AppRoutes.routes,
+      builder: EasyLoading.init(),
     );
   }
 }

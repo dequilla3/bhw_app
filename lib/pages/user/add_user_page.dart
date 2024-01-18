@@ -42,6 +42,8 @@ class _AddUserPageState extends State<AddUserPage> {
         onConfirmBtnTap: () {
           if (isPop) {
             Navigator.of(context).pushReplacementNamed(AppRoutes.mainPage);
+          } else {
+            Navigator.pop(context);
           }
         },
       );
@@ -55,8 +57,67 @@ class _AddUserPageState extends State<AddUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    final postProvider = context.read<UserProvider>();
+    final userProvider = context.read<UserProvider>();
+
+    bool isValid() {
+      if (firstNameController.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "First name is required!",
+          isPop: false,
+        );
+        return false;
+      }
+      if (middleNameController.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "Middle name is required!",
+          isPop: false,
+        );
+        return false;
+      }
+
+      if (lastNameController.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "Last name is required!",
+          isPop: false,
+        );
+        return false;
+      }
+
+      if (address1Controller.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "Address1 name is required!",
+          isPop: false,
+        );
+        return false;
+      }
+
+      if (gender == Gender.none) {
+        showAlert(
+          QuickAlertType.error,
+          "Please select gender!",
+          isPop: false,
+        );
+        return false;
+      }
+
+      if (role == Role.none) {
+        showAlert(
+          QuickAlertType.error,
+          "Please select role!",
+          isPop: false,
+        );
+        return false;
+      }
+      return true;
+    }
+
     addUser() {
+      if (!isValid()) return;
+
       User user = User(
         firstName: firstNameController.text,
         middleName: middleNameController.text,
@@ -67,10 +128,10 @@ class _AddUserPageState extends State<AddUserPage> {
         role: role.name,
       );
 
-      postProvider.addUser(user).then(
+      userProvider.addUser(user).then(
         (res) {
           if (res["errorMsg"] != null) {
-            Future.delayed(const Duration(seconds: 1), () {
+            Future.delayed(const Duration(seconds: 0), () {
               showAlert(
                 QuickAlertType.error,
                 res["errorMsg"],
@@ -78,7 +139,7 @@ class _AddUserPageState extends State<AddUserPage> {
               );
             });
           } else {
-            Future.delayed(const Duration(seconds: 1), () {
+            Future.delayed(const Duration(seconds: 0), () {
               showAlert(
                 QuickAlertType.success,
                 "Successfully added user!",
