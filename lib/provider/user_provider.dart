@@ -34,7 +34,10 @@ class UserProvider extends ProviderBase {
   Future<Map<String, dynamic>> auth(String username, String password) async {
     Map<String, dynamic> res =
         await LoginUserService(username: username, password: password).call();
-    loggedInUserId = int.parse(res['authData']['user_id']);
+
+    if (res['authData'] != null) {
+      loggedInUserId = int.parse(res['authData']['user_id']);
+    }
 
     return res;
   }
