@@ -26,22 +26,22 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       decoration: InputDecoration(
-        isDense: true,
-        labelText: hint,
-        labelStyle: const TextStyle(color: AppColors.font2, fontSize: 14),
-        border: const OutlineInputBorder(),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.transparent,
+          isDense: true,
+          labelText: hint,
+          labelStyle: const TextStyle(color: AppColors.font2, fontSize: 14),
+          border: const OutlineInputBorder(),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.transparent,
+            ),
           ),
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.transparent,
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.transparent,
+            ),
           ),
-        ),
-        filled: true,
-      ),
+          filled: true,
+          fillColor: AppColors.secondary),
     );
   }
 }

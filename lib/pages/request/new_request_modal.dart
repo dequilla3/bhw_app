@@ -1,8 +1,8 @@
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/data/model/user_request.dart';
 import 'package:bhw_app/provider/request_provider.dart';
-import 'package:bhw_app/style/app_colors.dart';
 import 'package:bhw_app/style/app_text.dart';
+import 'package:bhw_app/style/btn_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -83,26 +83,26 @@ class _NewRequestModalState extends State<NewRequestModal> {
                     },
                   ),
                   const SizedBox(height: 8),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: AppColors.primary.withOpacity(0.2),
-                      // padding: const EdgeInsets.only(left: 20, right: 20),
-                    ),
-                    onPressed: () {
-                      tfFocus.unfocus();
-                      UserRequest userRequest = UserRequest(uuid.v1(),
-                          requestDetails, isChecked, 'PENDING', DateTime.now());
+                  SizedBox(
+                    height: 40,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      // } else {
+                      onPressed: () {
+                        tfFocus.unfocus();
+                        UserRequest userRequest = UserRequest(
+                            uuid.v1(),
+                            requestDetails,
+                            isChecked,
+                            'PENDING',
+                            DateTime.now());
 
-                      requestProiver.addRequest(userRequest);
+                        requestProiver.addRequest(userRequest);
 
-                      Navigator.pop(context);
-                    },
-                    child: const SizedBox(
-                      width: double.infinity,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text('Create'),
-                      ),
+                        Navigator.pop(context);
+                      },
+                      style: BtnStyle.primary,
+                      child: const Text('Create Request'),
                     ),
                   ),
                 ],

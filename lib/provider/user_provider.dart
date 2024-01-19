@@ -1,11 +1,14 @@
 import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/data/service/user/add_user_service.dart';
+import 'package:bhw_app/data/service/user/create_new_password_page.dart';
 import 'package:bhw_app/data/service/user/get_user_service.dart';
 import 'package:bhw_app/data/service/user/login_user_service.dart';
 import 'package:bhw_app/provider/provider_base.dart';
 
 class UserProvider extends ProviderBase {
   final List<User> users = [];
+
+  int? loggedInUserId;
 
   getUsers() async {
     List<User> posts = await GetUserService().call();
@@ -29,7 +32,16 @@ class UserProvider extends ProviderBase {
   }
 
   Future<Map<String, dynamic>> auth(String username, String password) async {
-    return await LoginUserService(username: username, password: password)
+    Map<String, dynamic> res =
+        await LoginUserService(username: username, password: password).call();
+    loggedInUserId = int.parse(res['authData']['user_id']);
+
+    return res;
+  }
+
+  Future<Map<String, dynamic>> createNewPassword(String password) async {
+    return await CreateNewPasswordPage(
+            userId: loggedInUserId!, password: password)
         .call();
   }
 }

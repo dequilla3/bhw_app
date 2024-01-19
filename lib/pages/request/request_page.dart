@@ -104,9 +104,10 @@ class _RequestPageState extends State<RequestPage> {
                             ),
                             isThreeLine: true,
                             title: Text(
-                                DateFormat.yMd().format(request.dateCreated)),
-                            subtitle: Text(
                               request.details,
+                            ),
+                            subtitle: Text(
+                              DateFormat.yMd().format(request.dateCreated),
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 12,

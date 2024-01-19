@@ -35,6 +35,20 @@ abstract class ServiceBase<T> {
     return _handleResponse(response);
   }
 
+  Future<Map<String, dynamic>> put(
+    String apirUrl, {
+    Map<String, dynamic>? body,
+    String? token,
+  }) async {
+    final response = await MyRequest(token).put(
+      _getV1Url(apirUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    return _handleResponse(response);
+  }
+
   Map<String, dynamic> _handleResponse(http.Response response) {
     return jsonDecode(response.body);
   }

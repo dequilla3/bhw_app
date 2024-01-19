@@ -61,37 +61,41 @@ class _MainPageState extends State<MainPage> {
           )
         ],
       ),
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        // indicatorColor: AppColors.primary,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.thumbsUp,
-              size: 20,
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: NavigationBar(
+          backgroundColor: Colors.transparent,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          // indicatorColor: AppColors.primary,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              icon: FaIcon(
+                FontAwesomeIcons.userPlus,
+                size: 18,
+              ),
+              label: 'Register',
             ),
-            label: 'Approval',
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.userPlus,
-              size: 20,
+            NavigationDestination(
+              icon: FaIcon(
+                FontAwesomeIcons.thumbsUp,
+                size: 18,
+              ),
+              label: 'Approval',
             ),
-            label: 'Register',
-          ),
-        ],
+          ],
+        ),
       ),
       body: <Widget>[
+        const UserPage(),
         const Center(
           child: Text('approval'),
         ),
-        const UserPage(),
       ][currentPageIndex],
     );
   }

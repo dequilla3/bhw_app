@@ -20,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final focusUserName = FocusNode();
   final focusPassword = FocusNode();
-  final _isLoading = false;
 
   showAlert(QuickAlertType type, String text, {bool isPop = false}) {
     Future.delayed(Duration.zero, () {
@@ -61,41 +60,73 @@ class _LoginPageState extends State<LoginPage> {
         );
         return false;
       }
+
       return true;
     }
 
-    auth() {
-      if (!isValid()) return;
-      EasyLoading.show(status: 'Loggin In...');
+    void authentication() {
+      try {
+        if (!isValid()) return;
+        bool isLoggedIn = false;
+        EasyLoading.show(status: 'Loggin In...');
 
-      userProvider.auth(usernameController.text, passwordController.text).then(
-        (res) {
-          EasyLoading.dismiss();
-          focusUserName.unfocus();
-          focusPassword.unfocus();
-          if (res['authData'] != null) {
-            if (res['authData']['role_user'] == 'admin') {
+        //connection timeout 30 seconds
+        Future.delayed(const Duration(seconds: 30)).then(
+          (value) {
+            if (!isLoggedIn) {
+              showAlert(
+                QuickAlertType.error,
+                "Connection timeout!",
+                isPop: false,
+              );
+              EasyLoading.dismiss();
+            }
+          },
+        );
+
+        //calling api starts here
+        userProvider
+            .auth(usernameController.text, passwordController.text)
+            .then(
+          (res) {
+            isLoggedIn = true;
+
+            EasyLoading.dismiss();
+
+            focusUserName.unfocus();
+            focusPassword.unfocus();
+
+            //has error
+            if (res['authData'] == null) {
+              //show message error
+              if (res['msg'] != null) {
+                showAlert(
+                  QuickAlertType.error,
+                  res['msg'],
+                  isPop: false,
+                );
+              }
+              return;
+            }
+
+            if (usernameController.text == passwordController.text) {
+              Navigator.of(context).pushNamed(AppRoutes.firstTimeLoginPage);
+            } else if (res['authData']['role_user'] == 'admin') {
               Navigator.of(context).pushReplacementNamed(AppRoutes.mainPage);
             } else {
               Navigator.of(context).pushReplacementNamed(AppRoutes.requestPage);
             }
-          } else {
-            if (res['msg'] != null) {
-              showAlert(
-                QuickAlertType.error,
-                res['msg'],
-                isPop: false,
-              );
-            } else {
-              showAlert(
-                QuickAlertType.error,
-                "Something went wrong!",
-                isPop: false,
-              );
-            }
-          }
-        },
-      );
+          },
+        );
+      } catch (err) {
+        //catch any error
+        showAlert(
+          QuickAlertType.error,
+          "Something went wrong!",
+          isPop: false,
+        );
+        EasyLoading.dismiss();
+      }
     }
 
     return Scaffold(
@@ -144,26 +175,13 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     // } else {
                     onPressed: () {
-                      auth();
+                      authentication();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: const Color.fromARGB(255, 255, 255, 255),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Login'),
-                        const SizedBox(width: 8),
-                        SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: _isLoading
-                              ? const CircularProgressIndicator()
-                              : const SizedBox(),
-                        )
-                      ],
-                    ),
+                    child: const Text('Login'),
                   ),
                 ),
                 const Spacer(),
