@@ -1,5 +1,5 @@
 import 'package:bhw_app/data/model/user_request.dart';
-import 'package:bhw_app/data/service/user_request_service.dart';
+import 'package:bhw_app/data/service/request/user_request_service.dart';
 import 'package:bhw_app/provider/provider_base.dart';
 
 class RequestProvider extends ProviderBase {

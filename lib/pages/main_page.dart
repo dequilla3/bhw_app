@@ -1,8 +1,9 @@
 import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
-import 'package:bhw_app/pages/request_page.dart';
-import 'package:bhw_app/provider/request_provider.dart';
+import 'package:bhw_app/pages/user/user_page.dart';
+import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 enum Menus { edit, logout }
@@ -15,17 +16,18 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  Future<void> _loadRequest() async {
-    context.read<RequestProvider>().getUserRequest();
+  int currentPageIndex = 0;
+
+  Future<void> loadUser() async {
+    context.read<UserProvider>().getUsers();
   }
 
   @override
   void initState() {
     super.initState();
-    _loadRequest();
-  }
 
-  int currentPageIndex = 0;
+    loadUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,6 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (int index) {
           setState(() {
@@ -71,27 +72,26 @@ class _MainPageState extends State<MainPage> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Icon(Icons.swap_vert_circle),
-            label: 'Request',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.approval),
+            icon: FaIcon(
+              FontAwesomeIcons.thumbsUp,
+              size: 20,
+            ),
             label: 'Approval',
           ),
           NavigationDestination(
-            icon: Icon(Icons.app_registration),
+            icon: FaIcon(
+              FontAwesomeIcons.userPlus,
+              size: 20,
+            ),
             label: 'Register',
           ),
         ],
       ),
       body: <Widget>[
-        const RequestPage(),
         const Center(
           child: Text('approval'),
         ),
-        const Center(
-          child: Text('register'),
-        ),
+        const UserPage(),
       ][currentPageIndex],
     );
   }

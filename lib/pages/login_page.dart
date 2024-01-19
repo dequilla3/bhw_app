@@ -1,7 +1,12 @@
 import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,11 +20,83 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   final focusUserName = FocusNode();
   final focusPassword = FocusNode();
-  var _isLoading = false;
+  final _isLoading = false;
+
+  showAlert(QuickAlertType type, String text, {bool isPop = false}) {
+    Future.delayed(Duration.zero, () {
+      QuickAlert.show(
+        context: context,
+        type: type,
+        text: text,
+        onConfirmBtnTap: () {
+          if (isPop) {
+            Navigator.of(context).pushReplacementNamed(AppRoutes.mainPage);
+          } else {
+            Navigator.pop(context);
+          }
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    final userProvider = context.read<UserProvider>();
+
+    bool isValid() {
+      if (usernameController.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "Username is required!",
+          isPop: false,
+        );
+        return false;
+      }
+      if (passwordController.text == "") {
+        showAlert(
+          QuickAlertType.error,
+          "Password is required!",
+          isPop: false,
+        );
+        return false;
+      }
+      return true;
+    }
+
+    auth() {
+      if (!isValid()) return;
+      EasyLoading.show(status: 'Loggin In...');
+
+      userProvider.auth(usernameController.text, passwordController.text).then(
+        (res) {
+          EasyLoading.dismiss();
+          focusUserName.unfocus();
+          focusPassword.unfocus();
+          if (res['authData'] != null) {
+            if (res['authData']['role_user'] == 'admin') {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.mainPage);
+            } else {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.requestPage);
+            }
+          } else {
+            if (res['msg'] != null) {
+              showAlert(
+                QuickAlertType.error,
+                res['msg'],
+                isPop: false,
+              );
+            } else {
+              showAlert(
+                QuickAlertType.error,
+                "Something went wrong!",
+                isPop: false,
+              );
+            }
+          }
+        },
+      );
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -65,12 +142,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 40,
                   width: double.infinity,
                   child: ElevatedButton(
+                    // } else {
                     onPressed: () {
-                      //TODO: doLogin();
-                      focusUserName.unfocus();
-                      focusPassword.unfocus();
-                      Navigator.of(context)
-                          .pushReplacementNamed(AppRoutes.mainPage);
+                      auth();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
