@@ -1,3 +1,4 @@
+import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/style/app_text.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class RequestDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appRepo = Provider.of<RequestProvider>(context);
+    final requestProvider = Provider.of<RequestProvider>(context);
 
     Widget renderRequestBadge(isEmerg) {
       return Padding(
@@ -113,15 +114,25 @@ class RequestDetailsScreen extends StatelessWidget {
           ),
           Row(
             children: [
-              renderRequestBadge(appRepo.userRequest!.isEmergency),
-              renderApprovalBadge(appRepo.userRequest!.status),
+              renderRequestBadge(
+                  requestProvider.userRequest!.requestType == "EMERGENCY"),
+              renderApprovalBadge(requestProvider.userRequest!.isApprove!
+                  ? "APPROVED"
+                  : "PENDING"),
             ],
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(appRepo.userRequest!.details),
+                Text(
+                  "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
+                  style: AppText.header3,
+                ),
+                Text(
+                  requestProvider.userRequest!.reasonRequest,
+                ),
               ],
             ),
           ),

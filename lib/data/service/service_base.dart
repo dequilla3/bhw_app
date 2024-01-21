@@ -1,16 +1,9 @@
 import 'dart:convert';
 
 import 'package:bhw_app/config/app_config.dart';
-import 'package:localstore/localstore.dart';
 import 'package:http/http.dart' as http;
 
 abstract class ServiceBase<T> {
-  final Localstore db = Localstore.instance;
-
-  getLocalStoreCollections(String collection) async {
-    return await db.collection(collection).get();
-  }
-
   Future<T> call();
 
   Uri url(String url) => Uri.http(AppConfig.baseUrl, url);
