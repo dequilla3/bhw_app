@@ -11,6 +11,11 @@ class RequestDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final requestProvider = Provider.of<RequestProvider>(context);
+    String status = requestProvider.userRequest?.isApprove == null
+        ? "PENDING"
+        : requestProvider.userRequest!.isApprove!
+            ? "APPROVED"
+            : "REJECTED";
 
     Widget renderRequestBadge(isEmerg) {
       return Padding(
@@ -116,24 +121,25 @@ class RequestDetailsScreen extends StatelessWidget {
             children: [
               renderRequestBadge(
                   requestProvider.userRequest!.requestType == "EMERGENCY"),
-              renderApprovalBadge(requestProvider.userRequest!.isApprove!
-                  ? "APPROVED"
-                  : "PENDING"),
+              renderApprovalBadge(status),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
-                  style: AppText.header3,
-                ),
-                Text(
-                  requestProvider.userRequest!.reasonRequest,
-                ),
-              ],
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
+                    style: AppText.header3,
+                  ),
+                  Text(
+                    requestProvider.userRequest!.reasonRequest,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

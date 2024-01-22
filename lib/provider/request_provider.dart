@@ -1,5 +1,6 @@
 import 'package:bhw_app/data/model/user_request.dart';
 import 'package:bhw_app/data/service/request/add_request_service.dart';
+import 'package:bhw_app/data/service/request/approve_request_service.dart';
 import 'package:bhw_app/data/service/request/get_user_request_service.dart';
 import 'package:bhw_app/provider/provider_base.dart';
 
@@ -17,12 +18,32 @@ class RequestProvider extends ProviderBase {
 
     //Store current ids
 
-    for (var userRequest in userRequests) {
+    for (var userRequest in userRequests.reversed) {
       if (userRequest.userId == loggedInUserId) {
         requests.add(userRequest);
       }
     }
 
     notifyListeners();
+  }
+
+  getPendingRequest() async {
+    requests = [];
+    List<UserRequest> userRequests = await GetUserRequestService().call();
+    for (var userRequest in userRequests) {
+      if (userRequest.isApprove == null) {
+        requests.add(userRequest);
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> approveRequest(
+      {bool isApproved = true, String? explanation}) async {
+    return await ApproveRequestService().call(
+      id: userRequest!.id!,
+      isApproved: isApproved,
+      explanation: explanation,
+    );
   }
 }

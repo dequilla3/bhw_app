@@ -101,13 +101,8 @@ class _UserPageState extends State<UserPage> {
                               "${user.firstName} ${user.lastName}"
                                   .toUpperCase(),
                             ),
-                            subtitle: Row(
-                              children: [
-                                getGenderIcon(user.gender),
-                                Text(
-                                  " ${user.addressLine1}, ${user.addressLine2}",
-                                ),
-                              ],
+                            subtitle: Text(
+                              "${user.addressLine1}, ${user.addressLine2}",
                             ),
                             trailing: Padding(
                               padding: const EdgeInsets.only(top: 16),

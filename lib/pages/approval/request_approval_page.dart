@@ -1,7 +1,6 @@
-import 'package:bhw_app/components/default_toolbar.dart';
 import 'package:bhw_app/config/app_data_context.dart';
-import 'package:bhw_app/pages/request/new_request_modal.dart';
-import 'package:bhw_app/pages/request/request_details_screen.dart';
+import 'package:bhw_app/data/model/user.dart';
+import 'package:bhw_app/pages/approval/request_approval_modal.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
@@ -9,42 +8,39 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class RequestPage extends StatefulWidget {
-  const RequestPage({super.key});
+class RequestApprovalPage extends StatefulWidget {
+  const RequestApprovalPage({super.key});
 
   @override
-  State<RequestPage> createState() => _RequestPageState();
+  State<RequestApprovalPage> createState() => _RequestApprovalPageState();
 }
 
-class _RequestPageState extends State<RequestPage> {
+class _RequestApprovalPageState extends State<RequestApprovalPage> {
   ScrollController? scrollController;
+
+  Future<void> _loadPendingRequests() async {
+    context
+        .read<UserProvider>()
+        .getUsers()
+        .then((value) => context.read<RequestProvider>().getPendingRequest());
+  }
 
   void scrollListener() {
     if (scrollController!.position.extentAfter < 500) {
-      _loadRequest();
+      _loadPendingRequests();
     }
-  }
-
-  Future<void> _loadRequest() async {
-    context
-        .read<RequestProvider>()
-        .getUserRequest(context.read<UserProvider>().loggedInUserId!);
   }
 
   @override
   void initState() {
     super.initState();
-    _loadRequest();
-  }
-
-  @override
-  void dispose() {
-    scrollController?.removeListener(scrollListener);
-    super.dispose();
+    _loadPendingRequests();
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.read<UserProvider>();
+
     Widget statusIcon(String status) {
       if (status == 'APPROVED') {
         return const FaIcon(
@@ -68,9 +64,8 @@ class _RequestPageState extends State<RequestPage> {
     }
 
     return Scaffold(
-      appBar: const DefaultToolBar(),
       body: RefreshIndicator(
-        onRefresh: () => _loadRequest(),
+        onRefresh: () => _loadPendingRequests(),
         child: Consumer<RequestProvider>(
           builder: (context, value, child) {
             return Stack(
@@ -90,6 +85,8 @@ class _RequestPageState extends State<RequestPage> {
                                 : request.isApprove!
                                     ? "APPROVED"
                                     : "REJECTED";
+                            User user =
+                                userProvider.getUserById(request.userId);
 
                             return ListTile(
                               onTap: () {
@@ -100,8 +97,9 @@ class _RequestPageState extends State<RequestPage> {
                                     elevation: 1,
                                     backgroundColor: Colors.transparent,
                                     context: context,
+                                    isScrollControlled: true,
                                     builder: (context) {
-                                      return const RequestDetailsScreen();
+                                      return const RequestApprovalModal();
                                     },
                                   );
                                 });
@@ -127,10 +125,11 @@ class _RequestPageState extends State<RequestPage> {
                               ),
                               isThreeLine: true,
                               title: Text(
-                                "${AppDataContext.getMedicines()[request.medRequestId]}",
+                                "${user.firstName} ${user.lastName}"
+                                    .toUpperCase(),
                               ),
                               subtitle: Text(
-                                request.reasonRequest,
+                                "${AppDataContext.getMedicines()[request.medRequestId]} | ${request.reasonRequest}",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 12,
@@ -146,23 +145,6 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ],
                 ),
-                Positioned(
-                  bottom: 20,
-                  right: 20,
-                  child: FloatingActionButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          elevation: 1,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (context) {
-                            return const NewRequestModal();
-                          },
-                        );
-                      },
-                      child: const FaIcon(FontAwesomeIcons.plus)),
-                )
               ],
             );
           },

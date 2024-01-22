@@ -1,5 +1,6 @@
 import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/pages/approval/request_approval_page.dart';
 import 'package:bhw_app/pages/user/user_page.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -93,9 +94,7 @@ class _MainPageState extends State<MainPage> {
       ),
       body: <Widget>[
         const UserPage(),
-        const Center(
-          child: Text('approval'),
-        ),
+        const RequestApprovalPage(),
       ][currentPageIndex],
     );
   }

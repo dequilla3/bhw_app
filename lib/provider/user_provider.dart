@@ -6,25 +6,21 @@ import 'package:bhw_app/data/service/user/login_user_service.dart';
 import 'package:bhw_app/provider/provider_base.dart';
 
 class UserProvider extends ProviderBase {
-  final List<User> users = [];
-
+  List<User> users = [];
   int? loggedInUserId;
 
-  getUsers() async {
-    List<User> posts = await GetUserService().call();
-    List<int> curIds = [];
+  Future<List<User>> getUsers() async {
+    var res = await GetUserService().call();
+    users = [];
+    users.addAll(res);
 
-    //Store current ids
-    for (var user in users) {
-      curIds.add(user.id!);
-    }
-
-    for (var post in posts) {
-      if (!curIds.contains(post.id)) {
-        users.add(post);
-      }
-    }
     notifyListeners();
+
+    return res;
+  }
+
+  User getUserById(id) {
+    return users.firstWhere((element) => element.id == id);
   }
 
   Future<Map<String, dynamic>> addUser(User user) async {
