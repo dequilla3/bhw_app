@@ -1,6 +1,6 @@
 import 'package:bhw_app/config/app_data_context.dart';
+import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/data/model/user.dart';
-import 'package:bhw_app/pages/approval/request_approval_modal.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
@@ -35,6 +35,11 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
   void initState() {
     super.initState();
     _loadPendingRequests();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -90,19 +95,9 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
 
                             return ListTile(
                               onTap: () {
-                                Future.delayed(
-                                    const Duration(milliseconds: 150), () {
-                                  value.userRequest = request;
-                                  showModalBottomSheet(
-                                    elevation: 1,
-                                    backgroundColor: Colors.transparent,
-                                    context: context,
-                                    isScrollControlled: true,
-                                    builder: (context) {
-                                      return const RequestApprovalModal();
-                                    },
-                                  );
-                                });
+                                value.userRequest = request;
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.approveRequestPage);
                               },
                               leading: CircleAvatar(
                                 foregroundColor: Colors.white,

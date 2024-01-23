@@ -1,10 +1,10 @@
 import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/components/toolbar.dart';
-import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -41,7 +41,12 @@ class _AddUserPageState extends State<AddUserPage> {
         text: text,
         onConfirmBtnTap: () {
           if (isPop) {
-            Navigator.of(context).pushReplacementNamed(AppRoutes.mainPage);
+            Navigator.pop(context);
+            EasyLoading.show(status: "Loading...");
+            Future.delayed(const Duration(seconds: 1)).then((value) {
+              EasyLoading.dismiss();
+              Navigator.pop(context);
+            });
           } else {
             Navigator.pop(context);
           }
@@ -53,6 +58,11 @@ class _AddUserPageState extends State<AddUserPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

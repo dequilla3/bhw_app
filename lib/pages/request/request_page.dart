@@ -39,8 +39,8 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   void dispose() {
-    scrollController?.removeListener(scrollListener);
     super.dispose();
+    scrollController?.removeListener(scrollListener);
   }
 
   @override

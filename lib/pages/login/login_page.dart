@@ -39,6 +39,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     final userProvider = context.read<UserProvider>();

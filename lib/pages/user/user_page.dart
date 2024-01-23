@@ -45,15 +45,6 @@ class _UserPageState extends State<UserPage> {
           .withOpacity(1.0);
     }
 
-    FaIcon getGenderIcon(String gender) {
-      return FaIcon(
-        gender.toLowerCase() == "male"
-            ? FontAwesomeIcons.person
-            : FontAwesomeIcons.personDress,
-        size: 11,
-      );
-    }
-
     Widget getRoleIcon(String role) {
       return Column(
         children: [

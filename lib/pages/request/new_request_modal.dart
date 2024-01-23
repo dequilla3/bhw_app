@@ -50,6 +50,11 @@ class _NewRequestModalState extends State<NewRequestModal> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final requestProiver = Provider.of<RequestProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
