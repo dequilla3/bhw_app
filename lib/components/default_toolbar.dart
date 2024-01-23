@@ -2,6 +2,7 @@ import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/pages/main_page.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
   const DefaultToolBar({super.key});
@@ -13,6 +14,10 @@ class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
         title: 'B H W',
         actions: [
           PopupMenuButton<Menus>(
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: FaIcon(FontAwesomeIcons.circleUser),
+            ),
             onSelected: (value) {
               Navigator.of(context).pushReplacementNamed(AppRoutes.loginPage);
             },
@@ -24,9 +29,9 @@ class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.logout,
-                          color: Colors.black,
+                        child: FaIcon(
+                          FontAwesomeIcons.powerOff,
+                          size: 16,
                         ),
                       ),
                       Text('Log out')

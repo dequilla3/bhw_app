@@ -1,5 +1,4 @@
-import 'package:bhw_app/components/toolbar.dart';
-import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/components/default_toolbar.dart';
 import 'package:bhw_app/pages/approval/request_approval_page.dart';
 import 'package:bhw_app/pages/user/user_page.dart';
 import 'package:bhw_app/provider/user_provider.dart';
@@ -33,35 +32,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ToolBar(
-        title: 'B H W',
-        actions: [
-          PopupMenuButton<Menus>(
-            onSelected: (value) {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.loginPage);
-            },
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem(
-                  value: Menus.logout,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.logout,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text('Log out')
-                    ],
-                  ),
-                ),
-              ];
-            },
-          )
-        ],
-      ),
+      appBar: const DefaultToolBar(),
       bottomNavigationBar: SizedBox(
         height: 60,
         child: NavigationBar(

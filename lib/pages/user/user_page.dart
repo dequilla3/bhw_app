@@ -108,10 +108,11 @@ class _UserPageState extends State<UserPage> {
                 bottom: 20,
                 right: 20,
                 child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.addUserPage);
-                    },
-                    child: const FaIcon(FontAwesomeIcons.plus)),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.addUserPage);
+                  },
+                  child: const FaIcon(FontAwesomeIcons.plus),
+                ),
               )
             ],
           );

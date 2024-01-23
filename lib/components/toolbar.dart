@@ -1,5 +1,6 @@
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ToolBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -9,15 +10,25 @@ class ToolBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      elevation: 1,
       foregroundColor: Colors.black,
-      title: Text(
-        title ?? "",
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w400,
-          color: AppColors.font2,
-        ),
+      title: Row(
+        children: [
+          const FaIcon(
+            FontAwesomeIcons.capsules,
+            size: 22,
+            color: AppColors.font2,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            title ?? "",
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+              color: AppColors.font2,
+            ),
+          ),
+        ],
       ),
       centerTitle: false,
       actions: actions,
