@@ -1,19 +1,19 @@
 import 'package:bhw_app/config/app_routes.dart';
-import 'package:bhw_app/provider/app_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
-import 'package:bhw_app/style/app_colors.dart';
+import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppProvider>(
-          create: (context) => AppProvider(),
-        ),
         ChangeNotifierProvider<RequestProvider>(
           create: (context) => RequestProvider(),
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
         ),
       ],
       child: const MyApp(),
@@ -27,15 +27,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = ColorScheme.fromSeed(
+      seedColor: Colors.blue,
+      brightness: Brightness.light,
+    );
+
     return MaterialApp(
       title: 'BHW',
       theme: ThemeData(
-        fontFamily: 'Poppins',
-        scaffoldBackgroundColor: AppColors.bgLight,
-        brightness: Brightness.light,
+        colorScheme: colorScheme,
       ),
       initialRoute: '/',
       routes: AppRoutes.routes,
+      builder: EasyLoading.init(),
     );
   }
 }

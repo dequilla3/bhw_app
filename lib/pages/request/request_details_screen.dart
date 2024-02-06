@@ -1,6 +1,8 @@
+import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/provider/request_provider.dart';
-import 'package:bhw_app/style/app_colors.dart';
+import 'package:bhw_app/style/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class RequestDetailsScreen extends StatelessWidget {
@@ -8,7 +10,12 @@ class RequestDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appRepo = Provider.of<RequestProvider>(context);
+    final requestProvider = Provider.of<RequestProvider>(context);
+    String status = requestProvider.userRequest?.isApprove == null
+        ? "PENDING"
+        : requestProvider.userRequest!.isApprove!
+            ? "APPROVED"
+            : "REJECTED";
 
     Widget renderRequestBadge(isEmerg) {
       return Padding(
@@ -92,27 +99,47 @@ class RequestDetailsScreen extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text('Details'),
-        backgroundColor: AppColors.bgLight,
-        foregroundColor: AppColors.font2,
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),
-      body: Column(
+      child: Column(
         children: [
+          const FaIcon(FontAwesomeIcons.gripLines),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, top: 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Details",
+                style: AppText.header3,
+              ),
+            ),
+          ),
           Row(
             children: [
-              renderRequestBadge(appRepo.userRequest!.isEmergency),
-              renderApprovalBadge(appRepo.userRequest!.status),
+              renderRequestBadge(
+                  requestProvider.userRequest!.requestType == "EMERGENCY"),
+              renderApprovalBadge(status),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Text(appRepo.userRequest!.details),
-              ],
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
+                    style: AppText.header3,
+                  ),
+                  Text(
+                    requestProvider.userRequest!.reasonRequest,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
