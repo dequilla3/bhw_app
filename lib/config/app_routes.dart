@@ -5,6 +5,7 @@ import 'package:bhw_app/pages/main_page.dart';
 import 'package:bhw_app/pages/request/request_details_screen.dart';
 import 'package:bhw_app/pages/request/request_page.dart';
 import 'package:bhw_app/pages/user/add_user_page.dart';
+import 'package:bhw_app/splash.dart';
 
 class AppRoutes {
   static const loginPage = '/';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const approveRequestPage = '/approve_request_page';
   static const requestDetailsRoute = '/request_details_screen';
   static const addUserPage = '/add_user_page';
+  static const splash = '/splash';
 
   static final routes = {
     loginPage: (contex) => const LoginPage(),
@@ -23,5 +25,6 @@ class AppRoutes {
     approveRequestPage: (contex) => const ApproveRequestPage(),
     addUserPage: (context) => const AddUserPage(),
     requestDetailsRoute: (context) => const RequestDetailsScreen(),
+    splash: (context) => const Splash(),
   };
 }

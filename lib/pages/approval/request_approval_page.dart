@@ -22,7 +22,7 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
     context
         .read<UserProvider>()
         .getUsers()
-        .then((value) => context.read<RequestProvider>().getPendingRequest());
+        .then((value) => context.read<RequestProvider>().getMedecineRequest());
   }
 
   void scrollListener() {

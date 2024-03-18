@@ -1,31 +1,52 @@
 import 'dart:convert';
 
-import 'package:bhw_app/config/app_config.dart';
+import 'package:bhw_app/config/app_url.dart';
 import 'package:http/http.dart' as http;
 
 abstract class ServiceBase<T> {
   Future<T> call();
 
-  Uri url(String url) => Uri.http(AppConfig.baseUrl, url);
+  Uri url(String url) => Uri.http(AppUrl.getBaseUrl(), url);
 
-  Uri _getV1Url(String url) => Uri.parse('${AppConfig.baseUrl}/$url');
+  Uri _getV1Url({String? baseUrl, String? url}) => Uri.parse('$baseUrl/$url');
 
-  Future<Map<String, dynamic>> get(String apiUrl, String? token) async {
-    return _handleResponse(await MyRequest(token).get(_getV1Url(apiUrl)));
+  Future<Map<String, dynamic>> get(
+    String apiUrl,
+    String? token,
+  ) async {
+    String? baseUrl = AppUrl.getBaseUrl();
+    return _handleResponse(
+        await MyRequest(token).get(_getV1Url(baseUrl: baseUrl, url: apiUrl)));
   }
 
   Future<Map<String, dynamic>> post(
-    String apirUrl, {
+    String? apirUrl, {
     Map<String, dynamic>? body,
     String? token,
+    String? contentType = 'application/json',
   }) async {
+    String? baseUrl = AppUrl.getBaseUrl();
     final response = await MyRequest(token).post(
-      _getV1Url(apirUrl),
-      headers: {'Content-Type': 'application/json'},
+      _getV1Url(baseUrl: baseUrl, url: apirUrl),
+      headers: {'Content-Type': contentType!},
       body: jsonEncode(body),
     );
-
     return _handleResponse(response);
+  }
+
+  void postOnly(
+    String? apirUrl, {
+    Map<String, dynamic>? body,
+    String? token,
+    String? contentType = 'application/json',
+  }) async {
+    String? baseUrl = AppUrl.getBaseUrl();
+    await MyRequest(token).post(
+      _getV1Url(baseUrl: baseUrl, url: apirUrl),
+      headers: {'Content-Type': contentType!},
+      body: jsonEncode(body),
+    );
+    return;
   }
 
   Future<Map<String, dynamic>> put(
@@ -33,8 +54,9 @@ abstract class ServiceBase<T> {
     Map<String, dynamic>? body,
     String? token,
   }) async {
+    String? baseUrl = AppUrl.getBaseUrl();
     final response = await MyRequest(token).put(
-      _getV1Url(apirUrl),
+      _getV1Url(baseUrl: baseUrl, url: apirUrl),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );

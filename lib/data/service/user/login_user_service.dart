@@ -11,6 +11,7 @@ class LoginUserService extends ServiceBase<void> {
     Map<String, dynamic> body = {
       'userName': username,
       'userPassword': password,
+      'projectCode': 'BHW'
     };
 
     return await post('user/authenticate', body: body);

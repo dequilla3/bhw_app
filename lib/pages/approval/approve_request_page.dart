@@ -32,7 +32,7 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
     return context
         .read<UserProvider>()
         .getUsers()
-        .then((value) => context.read<RequestProvider>().getPendingRequest());
+        .then((value) => context.read<RequestProvider>().getMedecineRequest());
   }
 
   showAlert(QuickAlertType type, String text) {

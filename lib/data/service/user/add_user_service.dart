@@ -20,6 +20,21 @@ class AddUserService extends ServiceBase<void> {
         'roleUser': user.role,
       }
     };
-    return await post('user/addUser', body: body);
+
+    var res = await post('user/addUser', body: body);
+    var id = res['newUserDetails']['user_id'];
+
+    Map<String, dynamic> bodyFingerPrint = {
+      'id': id,
+    };
+
+    //post finger print
+    postOnly(
+      'data',
+      body: bodyFingerPrint,
+      contentType: 'text/plain',
+    );
+
+    return res;
   }
 }

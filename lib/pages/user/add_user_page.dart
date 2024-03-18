@@ -125,31 +125,40 @@ class _AddUserPageState extends State<AddUserPage> {
       return true;
     }
 
+    bool hasError(Map<String, dynamic> res) {
+      if (res["errorMsg"] != null) {
+        Future.delayed(const Duration(seconds: 0), () {
+          showAlert(
+            QuickAlertType.error,
+            res["errorMsg"],
+            isPop: false,
+          );
+        });
+        return true;
+      }
+      return false;
+    }
+
     addUser() {
-      if (!isValid()) return;
+      try {
+        EasyLoading.show(status: 'Saving user...');
+        if (!isValid()) return;
 
-      User user = User(
-        firstName: firstNameController.text,
-        middleName: middleNameController.text,
-        lastName: lastNameController.text,
-        addressLine1: address1Controller.text,
-        addressLine2: address2Controller.text,
-        gender: gender.name,
-        role: role.name,
-      );
+        User user = User(
+          firstName: firstNameController.text,
+          middleName: middleNameController.text,
+          lastName: lastNameController.text,
+          addressLine1: address1Controller.text,
+          addressLine2: address2Controller.text,
+          gender: gender.name,
+          role: role.name,
+        );
 
-      userProvider.addUser(user).then(
-        (res) {
-          if (res["errorMsg"] != null) {
-            Future.delayed(const Duration(seconds: 0), () {
-              showAlert(
-                QuickAlertType.error,
-                res["errorMsg"],
-                isPop: false,
-              );
-            });
-          } else {
-            Future.delayed(const Duration(seconds: 0), () {
+        userProvider.addUser(user).then(
+          (res) {
+            if (hasError(res)) return;
+            Future.delayed(const Duration(seconds: 1), () {
+              EasyLoading.dismiss();
               showAlert(
                 QuickAlertType.success,
                 "Successfully added user!",
@@ -157,9 +166,16 @@ class _AddUserPageState extends State<AddUserPage> {
               );
               loadUser();
             });
-          }
-        },
-      );
+          },
+        );
+      } catch (e) {
+        EasyLoading.dismiss();
+        showAlert(
+          QuickAlertType.success,
+          "Something went wrong!",
+          isPop: false,
+        );
+      }
     }
 
     return Scaffold(

@@ -27,7 +27,7 @@ class RequestProvider extends ProviderBase {
     notifyListeners();
   }
 
-  getPendingRequest() async {
+  getMedecineRequest() async {
     requests = [];
     List<UserRequest> userRequests = await GetUserRequestService().call();
     for (var userRequest in userRequests) {
@@ -35,6 +35,7 @@ class RequestProvider extends ProviderBase {
         requests.add(userRequest);
       }
     }
+    requests = requests.reversed.toList();
     notifyListeners();
   }
 

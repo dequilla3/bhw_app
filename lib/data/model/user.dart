@@ -20,12 +20,12 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: int.parse(json['user_id']),
-        firstName: json['first_name'],
-        middleName: json['middle_name'],
-        lastName: json['last_name'],
-        addressLine1: json['address_line1'],
-        addressLine2: json['address_line2'],
-        gender: json['gender'],
-        role: json['role_user'],
+        firstName: json['first_name'] ?? "",
+        middleName: json['middle_name'] ?? "",
+        lastName: json['last_name'] ?? "",
+        addressLine1: json['address_line1'] ?? "",
+        addressLine2: json['address_line2'] ?? "",
+        gender: json['gender'] ?? "",
+        role: json['role_user'] ?? "",
       );
 }
