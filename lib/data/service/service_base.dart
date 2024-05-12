@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 abstract class ServiceBase<T> {
   Future<T> call();
 
-  Uri url(String url) => Uri.http(AppUrl.getBaseUrl(), url);
+  Uri url(String url) => Uri.parse(url);
 
   Uri _getV1Url({String? baseUrl, String? url}) => Uri.parse('$baseUrl/$url');
 
@@ -34,18 +34,19 @@ abstract class ServiceBase<T> {
     return _handleResponse(response);
   }
 
-  void postOnly(
-    String? apirUrl, {
+  void postOnly({
     Map<String, dynamic>? body,
     String? token,
     String? contentType = 'application/json',
   }) async {
-    String? baseUrl = AppUrl.getBaseUrl();
+    print(body);
+    String? deviceUrl = AppUrl.getDeviceUrl();
     await MyRequest(token).post(
-      _getV1Url(baseUrl: baseUrl, url: apirUrl),
+      url('$deviceUrl/data'),
       headers: {'Content-Type': contentType!},
       body: jsonEncode(body),
     );
+    print(deviceUrl);
     return;
   }
 

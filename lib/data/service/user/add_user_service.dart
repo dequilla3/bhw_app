@@ -30,7 +30,6 @@ class AddUserService extends ServiceBase<void> {
 
     //post finger print
     postOnly(
-      'data',
       body: bodyFingerPrint,
       contentType: 'text/plain',
     );
