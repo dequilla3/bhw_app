@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> {
         height: 60,
         child: NavigationBar(
           backgroundColor: Colors.transparent,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           onDestinationSelected: (int index) {
             setState(() {
               currentPageIndex = index;

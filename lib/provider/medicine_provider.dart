@@ -18,7 +18,22 @@ class MedicineProvider extends ProviderBase {
     return res;
   }
 
-  Future<Map<String, dynamic>> addMedicine(int itemCode, int newCnt) async {
+  Medicine? getMedicineByItemCode(int itemCode) {
+    // Find the medicine with the specified item code
+    Medicine? medicine;
+    try {
+      medicine = medicines.firstWhere(
+        (medicine) => medicine.itemCode == itemCode,
+      );
+    } catch (e) {
+      // Handle the case where no medicine is found
+      medicine = null;
+    }
+
+    return medicine;
+  }
+
+  Future<Map<String, dynamic>> updateMeds(int itemCode, int newCnt) async {
     return await AddMedicineService(itemCode: itemCode, newCnt: newCnt).call();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/data/model/user_request.dart';
+import 'package:bhw_app/provider/medicine_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_text.dart';
@@ -62,34 +63,48 @@ class _NewRequestModalState extends State<NewRequestModal> {
     addRequest() async {
       tfFocus.unfocus();
 
-      UserRequest userRequest = UserRequest(
-        userId: userProvider.loggedInUserId!,
-        requestType: isChecked ? "EMERGENCY" : "NORMAL",
-        reasonRequest: reason,
-        medRequestId: dropdownValue,
-      );
+      context.read<MedicineProvider>().getMedicines().then((value) {
+        if (context
+                .read<MedicineProvider>()
+                .getMedicineByItemCode(dropdownValue)
+                ?.stockCount ==
+            0) {
+          showAlert(
+            QuickAlertType.error,
+            "Not enough quantity!",
+          );
+          return;
+        }
 
-      EasyLoading.show(status: "Saving new request...");
-      try {
-        requestProiver.addRequest(userRequest).then((value) {
-          EasyLoading.dismiss();
-          Future.delayed(const Duration(seconds: 0), () {
-            //loadRequest in showAlert
-            showAlert(
-              QuickAlertType.success,
-              "Successfully added user!",
-              isPop: true,
-            );
-          });
-        });
-      } catch (err) {
-        showAlert(
-          QuickAlertType.error,
-          "Something went wrong!",
-          isPop: true,
+        UserRequest userRequest = UserRequest(
+          userId: userProvider.loggedInUserId!,
+          requestType: isChecked ? "EMERGENCY" : "NORMAL",
+          reasonRequest: reason,
+          medRequestId: dropdownValue,
         );
-        EasyLoading.dismiss();
-      }
+
+        EasyLoading.show(status: "Saving new request...");
+        try {
+          requestProiver.addRequest(userRequest).then((value) {
+            EasyLoading.dismiss();
+            Future.delayed(const Duration(seconds: 0), () {
+              //loadRequest in showAlert
+              showAlert(
+                QuickAlertType.success,
+                "Successfully added user!",
+                isPop: true,
+              );
+            });
+          });
+        } catch (err) {
+          showAlert(
+            QuickAlertType.error,
+            "Something went wrong!",
+            isPop: true,
+          );
+          EasyLoading.dismiss();
+        }
+      });
     }
 
     return GestureDetector(

@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/config/app_data_context.dart';
+import 'package:bhw_app/data/model/medicine.dart';
+import 'package:bhw_app/provider/medicine_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
@@ -26,13 +30,15 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
   void initState() {
     super.initState();
     tfFocus.requestFocus();
+    _loadPendingRequests();
   }
 
   Future<void> _loadPendingRequests() async {
-    return context
-        .read<UserProvider>()
-        .getUsers()
-        .then((value) => context.read<RequestProvider>().getMedecineRequest());
+    return context.read<UserProvider>().getUsers().then((value) async {
+      await context.read<MedicineProvider>().getMedicines().then((value) {
+        return context.read<RequestProvider>().getMedecineRequest();
+      });
+    });
   }
 
   showAlert(QuickAlertType type, String text) {
@@ -56,27 +62,45 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
   @override
   Widget build(BuildContext context) {
     final requestProvider = Provider.of<RequestProvider>(context);
+    final int itemCode = requestProvider.userRequest!.medRequestId;
+    final int? qty = context
+        .read<MedicineProvider>()
+        .getMedicineByItemCode(requestProvider.userRequest!.medRequestId)
+        ?.stockCount;
 
-    approveRequest() {
+    Future<void> approveRequest() async {
       if (explanation == null) {
         showAlert(QuickAlertType.error, "Explanation is required!");
         return;
       }
 
-      Future.delayed(Duration.zero, () {
+      if (qty == 0) {
+        showAlert(QuickAlertType.error, "Not enough quantity!");
+        return;
+      }
+
+      await Future.delayed(Duration.zero, () {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.confirm,
-          text: "You want to approve this request?",
-          onConfirmBtnTap: () {
+          text: (qty ?? 0) < 5
+              ? "Qty is less than 5. You want to approve this request?"
+              : "You want to approve this request?",
+          onConfirmBtnTap: () async {
             Navigator.pop(context);
             EasyLoading.show(status: "Sending approval...");
-            requestProvider
+            await requestProvider
                 .approveRequest(isApproved: true, explanation: explanation)
                 .then((value) {
               EasyLoading.dismiss();
-              showAlert(QuickAlertType.success, "Request approved!");
-              return;
+              EasyLoading.show(status: "Updating stocks. . .");
+              context
+                  .read<MedicineProvider>()
+                  .updateMeds(itemCode, (qty ?? 0) - 1)
+                  .then((value) {
+                EasyLoading.dismiss();
+                showAlert(QuickAlertType.success, "Request approved!");
+              });
             });
           },
         );
@@ -177,10 +201,14 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
+                        "${AppDataContext.getMedicines()[itemCode]} ",
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                         ),
+                      ),
+                      Text(
+                        "QTY: $qty",
+                        // requestProvider.userRequest!.medRequestId.toString(),
                       ),
                       Text(
                         requestProvider.userRequest!.reasonRequest,
@@ -209,8 +237,8 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    approveRequest();
+                  onPressed: () async {
+                    await approveRequest();
                   },
                   child: const SizedBox(
                     width: double.infinity,

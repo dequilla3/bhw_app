@@ -76,7 +76,7 @@ class _AddStocksPageState extends State<AddStocksPage> {
                   try {
                     EasyLoading.show(status: "Updating Stock . . .");
 
-                    await medProvider.addMedicine(widget.itemCode,
+                    await medProvider.updateMeds(widget.itemCode,
                         int.parse(qtyController.text) + widget.currentQty);
 
                     showAlertModal(
