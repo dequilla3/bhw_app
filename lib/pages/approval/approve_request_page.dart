@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/provider/medicine_provider.dart';
@@ -24,6 +25,7 @@ class ApproveRequestPage extends StatefulWidget {
 class _ApproveRequestPageState extends State<ApproveRequestPage> {
   final tfFocus = FocusNode();
   String? explanation;
+  final qtyController = TextEditingController();
 
   @override
   void initState() {
@@ -67,13 +69,26 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
         .getMedicineByItemCode(requestProvider.userRequest!.medRequestId)
         ?.stockCount;
 
+    bool isStringDigit(String input) {
+      // Define the regular expression for a string of digits
+      RegExp regExp = RegExp(r'^\d+$');
+
+      // Check if the input matches the regular expression
+      return regExp.hasMatch(input);
+    }
+
     Future<void> approveRequest() async {
+      int qtyDispense = int.parse(qtyController.text);
+      if (!isStringDigit(qtyController.text)) {
+        showAlert(QuickAlertType.error, "Qty must be number!");
+        return;
+      }
       if (explanation == null) {
         showAlert(QuickAlertType.error, "Explanation is required!");
         return;
       }
 
-      if (qty == 0) {
+      if (qtyDispense > (qty ?? 0)) {
         showAlert(QuickAlertType.error, "Not enough quantity!");
         return;
       }
@@ -95,7 +110,7 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
               EasyLoading.show(status: "Updating stocks. . .");
               context
                   .read<MedicineProvider>()
-                  .updateMeds(itemCode, (qty ?? 0) - 1)
+                  .updateMeds(itemCode, (qty ?? 0) - qtyDispense)
                   .then((value) {
                 EasyLoading.dismiss();
                 showAlert(QuickAlertType.success, "Request approved!");
@@ -202,15 +217,40 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                       Text(
                         "${AppDataContext.getMedicines()[itemCode]} ",
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
-                      Text(
-                        "QTY: $qty",
-                        // requestProvider.userRequest!.medRequestId.toString(),
+                      Row(
+                        children: [
+                          const Text(
+                            "QTY ON HAND: ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            "$qty",
+                          ),
+                        ],
                       ),
-                      Text(
-                        requestProvider.userRequest!.reasonRequest,
+                      Row(
+                        children: [
+                          const Text(
+                            "REASON: ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            requestProvider.userRequest!.reasonRequest,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      AppTextField(
+                        hint: "Enter Qty",
+                        controller: qtyController,
+                        focusNode: tfFocus,
                       ),
                     ],
                   ),
@@ -221,7 +261,6 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                 child: AppTextFieldExpandable(
                   maxLines: 5,
                   hint: 'Write explanation...',
-                  focusNode: tfFocus,
                   onChange: (value) {
                     setState(() {
                       explanation = value;

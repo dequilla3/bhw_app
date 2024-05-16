@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'BHW',
+      title: 'BHC',
       theme: ThemeData(
         colorScheme: colorScheme,
       ),
