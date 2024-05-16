@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bhw_app/components/app_text_field_expandable.dart';
 import 'package:bhw_app/config/app_data_context.dart';
-import 'package:bhw_app/data/model/medicine.dart';
 import 'package:bhw_app/provider/medicine_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
