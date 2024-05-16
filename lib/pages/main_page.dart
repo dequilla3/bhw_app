@@ -1,5 +1,6 @@
 import 'package:bhw_app/components/default_toolbar.dart';
 import 'package:bhw_app/pages/approval/request_approval_page.dart';
+import 'package:bhw_app/pages/inventory/inventory_page.dart';
 import 'package:bhw_app/pages/user/user_page.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -60,12 +61,20 @@ class _MainPageState extends State<MainPage> {
               ),
               label: 'Approval',
             ),
+            NavigationDestination(
+              icon: FaIcon(
+                FontAwesomeIcons.boxesStacked,
+                size: 18,
+              ),
+              label: 'Inventory',
+            ),
           ],
         ),
       ),
       body: <Widget>[
         const UserPage(),
         const RequestApprovalPage(),
+        const InventoryPage(),
       ][currentPageIndex],
     );
   }

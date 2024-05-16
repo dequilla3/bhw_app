@@ -1,4 +1,5 @@
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/provider/medicine_provider.dart';
 import 'package:bhw_app/provider/request_provider.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,9 @@ void main() async {
         ),
         ChangeNotifierProvider<UserProvider>(
           create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider<MedicineProvider>(
+          create: (context) => MedicineProvider(),
         ),
       ],
       child: const MyApp(),
