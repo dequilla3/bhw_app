@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:bhw_app/components/app_text_field.dart';
-import 'package:bhw_app/config/app_url.dart';
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/config/app_url.dart';
 import 'package:bhw_app/provider/user_provider.dart';
 import 'package:bhw_app/style/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     // Initialization tasks can be performed here
-    print('initState called');
     loadIps();
   }
 
@@ -228,12 +229,19 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
         );
-      } catch (err) {
-        //catch any error
-        print(err);
+      } on SocketException catch (_) {
+        // Handle network-related error
         showAlert(
           QuickAlertType.error,
-          "Something went wrong!",
+          'Network error. Please check your internet connection.\nPlease ensure the server is reachable and try again.',
+          isPop: false,
+        );
+        EasyLoading.dismiss();
+      } catch (err) {
+        //catch any error
+        showAlert(
+          QuickAlertType.error,
+          "$err",
           isPop: false,
         );
         EasyLoading.dismiss();
