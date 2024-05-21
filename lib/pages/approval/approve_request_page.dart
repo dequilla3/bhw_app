@@ -97,8 +97,8 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.confirm,
-          text: (qty ?? 0) < 5
-              ? "Qty is less than 5. You want to approve this request?"
+          text: (qty ?? 0) < 10
+              ? "Qty is less than 10. You want to approve this request?"
               : "You want to approve this request?",
           onConfirmBtnTap: () async {
             Navigator.pop(context);
