@@ -1,3 +1,4 @@
+import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/config/app_routes.dart';
 import 'package:bhw_app/data/model/user.dart';
@@ -16,6 +17,9 @@ class RequestApprovalPage extends StatefulWidget {
 }
 
 class _RequestApprovalPageState extends State<RequestApprovalPage> {
+  final searchController = TextEditingController();
+  final searchFocus = FocusNode();
+
   ScrollController? scrollController;
 
   Future<void> _loadPendingRequests() async {
@@ -45,6 +49,9 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.read<UserProvider>();
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+    final double screenHeight = screenSize.height;
 
     Widget statusIcon(String status) {
       if (status == 'APPROVED') {
@@ -72,18 +79,42 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
       body: RefreshIndicator(
         onRefresh: () => _loadPendingRequests(),
         child: Consumer<RequestProvider>(
-          builder: (context, value, child) {
-            return Stack(
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 8),
-                    Expanded(
+          builder: (context, reqProvider, child) {
+            return SizedBox(
+              width: screenWidth,
+              height: screenHeight,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 50,
+                      width: screenWidth,
+                      child: AppTextField(
+                        hint: "Search . . .",
+                        controller: searchController,
+                        focusNode: searchFocus,
+                        onChange: (value) {
+                        
+                          var users = userProvider
+                              .filterUserByName(searchController.text);
+
+                          reqProvider.filterRequestForApproval(
+                              searchController.text, users);
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        searchFocus.unfocus();
+                      },
                       child: ListView.builder(
                           controller: scrollController,
-                          itemCount: value.requests.length,
+                          itemCount: reqProvider.filteredRequests.length,
                           itemBuilder: (context, index) {
-                            var request = value.requests[index];
+                            var request = reqProvider.filteredRequests[index];
                             var isEmerg = request.requestType == "EMERGENCY";
                             String status = request.isApprove == null
                                 ? "PENDING"
@@ -95,7 +126,7 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
 
                             return ListTile(
                               onTap: () {
-                                value.userRequest = request;
+                                reqProvider.userRequest = request;
                                 Navigator.of(context)
                                     .pushNamed(AppRoutes.approveRequestPage);
                               },
@@ -138,9 +169,9 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
                             );
                           }),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             );
           },
         ),

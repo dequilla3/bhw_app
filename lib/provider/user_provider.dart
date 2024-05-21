@@ -19,6 +19,14 @@ class UserProvider extends ProviderBase {
     return res;
   }
 
+  List<User> filterUserByName(String s) {
+    return users.where((user) {
+      // Check if the user's first name or last name contains the search string
+      return user.firstName.toLowerCase().contains(s.toLowerCase()) ||
+          user.lastName.toLowerCase().contains(s.toLowerCase());
+    }).toList();
+  }
+
   User getUserById(id) {
     return users.firstWhere((element) => element.id == id);
   }

@@ -9,4 +9,14 @@ class AppDataContext {
 
     return medecines;
   }
+
+  // Corrected method to filter medicines by a keyword in their descriptions.
+  static Map<int, String> filterMedicinesByKeyword(String keyword) {
+    var allMedicines = getMedicines();
+    // Filtering using Map entries
+    Map<int, String> filteredMedicines = Map.fromEntries(allMedicines.entries
+        .where((entry) =>
+            entry.value.toLowerCase().contains(keyword.toLowerCase())));
+    return filteredMedicines;
+  }
 }
