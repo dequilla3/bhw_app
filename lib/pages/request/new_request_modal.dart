@@ -168,7 +168,9 @@ class _NewRequestModalState extends State<NewRequestModal> {
                           list.map<DropdownMenuEntry<int>>((int value) {
                         return DropdownMenuEntry<int>(
                           value: value,
-                          label: AppDataContext.getMedicines()[value]!,
+                          label: AppDataContext.getMedicines()[value]
+                              .toString()
+                              .split("-")[1],
                         );
                       }).toList(),
                       textStyle: const TextStyle(fontSize: 14),
