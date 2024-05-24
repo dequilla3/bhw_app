@@ -208,7 +208,7 @@ class _AddUserPageState extends State<AddUserPage> {
               height: 8,
             ),
             AppTextField(
-              hint: "Address Line",
+              hint: "Full address",
               controller: address1Controller,
             ),
             const SizedBox(
