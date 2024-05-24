@@ -91,7 +91,7 @@ class _NewRequestModalState extends State<NewRequestModal> {
               //loadRequest in showAlert
               showAlert(
                 QuickAlertType.success,
-                "Successfully added user!",
+                "Request successfully sent!",
                 isPop: true,
               );
             });
