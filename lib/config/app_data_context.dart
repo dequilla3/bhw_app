@@ -15,8 +15,11 @@ class AppDataContext {
     var allMedicines = getMedicines();
     // Filtering using Map entries
     Map<int, String> filteredMedicines = Map.fromEntries(allMedicines.entries
-        .where((entry) =>
-            entry.value.toLowerCase().contains(keyword.toLowerCase())));
+        .where((entry) => entry.value
+            .toString()
+            .split("-")[1]
+            .toLowerCase()
+            .contains(keyword.toLowerCase())));
     return filteredMedicines;
   }
 }

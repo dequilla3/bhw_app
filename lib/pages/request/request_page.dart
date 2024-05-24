@@ -1,3 +1,4 @@
+import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/components/default_toolbar.dart';
 import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/pages/request/new_request_modal.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+const List<String> list = <String>['PENDING', 'APPROVED', 'REJECTED'];
+
 class RequestPage extends StatefulWidget {
   const RequestPage({super.key});
 
@@ -18,6 +21,9 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   ScrollController? scrollController;
+  final searchController = TextEditingController();
+  final searchFocus = FocusNode();
+  String dropdownValue = list.first;
 
   void scrollListener() {
     if (scrollController!.position.extentAfter < 500) {
@@ -45,6 +51,10 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.read<UserProvider>();
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+
     Widget statusIcon(String status) {
       if (status == 'APPROVED') {
         return const FaIcon(
@@ -68,22 +78,76 @@ class _RequestPageState extends State<RequestPage> {
     }
 
     return Scaffold(
-      appBar: const DefaultToolBar(),
+      appBar: DefaultToolBar(
+        title: "My Requests",
+        user: context.read<UserProvider>().getLoggedUser(),
+      ),
       body: RefreshIndicator(
         onRefresh: () => _loadRequest(),
         child: Consumer<RequestProvider>(
-          builder: (context, value, child) {
+          builder: (context, reqProvider, child) {
+            var users = userProvider.filterUserByName(searchController.text);
             return Stack(
               children: [
                 Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: AppTextField(
+                              hint: "Search . . .",
+                              controller: searchController,
+                              focusNode: searchFocus,
+                              onChange: (value) {
+                                reqProvider.filterRequest(
+                                    searchController.text,
+                                    users,
+                                    dropdownValue,
+                                    context
+                                        .read<UserProvider>()
+                                        .loggedInUserId!,
+                                    false);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          DropdownMenu<String>(
+                            initialSelection: list.first,
+                            onSelected: (String? value) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                dropdownValue = value!;
+                                reqProvider.filterRequest(
+                                    searchController.text,
+                                    users,
+                                    dropdownValue,
+                                    context
+                                        .read<UserProvider>()
+                                        .loggedInUserId!,
+                                    false);
+                              });
+                            },
+                            dropdownMenuEntries: list
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                  value: value, label: value);
+                            }).toList(),
+                            width: screenWidth / 3,
+                            textStyle: const TextStyle(fontSize: 9),
+                          )
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Expanded(
                       child: ListView.builder(
                           controller: scrollController,
-                          itemCount: value.requests.length,
+                          itemCount: reqProvider.filteredRequests.length,
                           itemBuilder: (context, index) {
-                            var request = value.requests[index];
+                            var request = reqProvider.filteredRequests[index];
                             var isEmerg = request.requestType == "EMERGENCY";
                             String status = request.isApprove == null
                                 ? "PENDING"
@@ -95,7 +159,7 @@ class _RequestPageState extends State<RequestPage> {
                               onTap: () {
                                 Future.delayed(
                                     const Duration(milliseconds: 150), () {
-                                  value.userRequest = request;
+                                  reqProvider.userRequest = request;
                                   showModalBottomSheet(
                                     elevation: 1,
                                     backgroundColor: Colors.transparent,
@@ -127,7 +191,10 @@ class _RequestPageState extends State<RequestPage> {
                               ),
                               isThreeLine: true,
                               title: Text(
-                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("-")[1]}",
+                                AppDataContext.getMedicines()[
+                                        request.medRequestId]
+                                    .toString()
+                                    .split("-")[1],
                               ),
                               subtitle: Text(
                                 request.reasonRequest,

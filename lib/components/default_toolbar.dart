@@ -1,17 +1,20 @@
 import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
+import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultToolBar({super.key});
+  const DefaultToolBar({super.key, this.title, required this.user});
+  final String? title;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ToolBar(
-        title: 'B H W',
+        title: title ?? 'B H W',
         actions: [
           PopupMenuButton<Menus>(
             child: const Padding(
@@ -19,10 +22,27 @@ class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
               child: FaIcon(FontAwesomeIcons.circleUser),
             ),
             onSelected: (value) {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.loginPage);
+              if (value == Menus.logout) {
+                Navigator.of(context).pushReplacementNamed(AppRoutes.loginPage);
+              }
             },
             itemBuilder: (context) {
               return [
+                PopupMenuItem(
+                  value: Menus.user,
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: FaIcon(
+                          FontAwesomeIcons.user,
+                          size: 16,
+                        ),
+                      ),
+                      Text("${user.firstName} ${user.lastName}".toUpperCase())
+                    ],
+                  ),
+                ),
                 const PopupMenuItem(
                   value: Menus.logout,
                   child: Row(

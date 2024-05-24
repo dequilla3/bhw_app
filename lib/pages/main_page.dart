@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-enum Menus { edit, logout }
+enum Menus { user, logout }
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -33,7 +33,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultToolBar(),
+      appBar: DefaultToolBar(
+        title: "ADMIN",
+        user: context.read<UserProvider>().getLoggedUser(),
+      ),
       bottomNavigationBar: SizedBox(
         height: 60,
         child: NavigationBar(

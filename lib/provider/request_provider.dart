@@ -17,6 +17,7 @@ class RequestProvider extends ProviderBase {
 
   getUserRequest(int loggedInUserId) async {
     requests = [];
+    filteredRequests = [];
     List<UserRequest> userRequests = await GetUserRequestService().call();
 
     //Store current ids
@@ -24,6 +25,7 @@ class RequestProvider extends ProviderBase {
     for (var userRequest in userRequests.reversed) {
       if (userRequest.userId == loggedInUserId) {
         requests.add(userRequest);
+        filteredRequests.add(userRequest);
       }
     }
 
@@ -36,21 +38,14 @@ class RequestProvider extends ProviderBase {
 
     List<UserRequest> userRequests = await GetUserRequestService().call();
     for (var userRequest in userRequests) {
-      if (userRequest.isApprove == null) {
-        requests.add(userRequest);
-        filteredRequests.add(userRequest);
-      }
+      requests.add(userRequest);
+      filteredRequests.add(userRequest);
     }
-    requests = requests.reversed.toList();
     notifyListeners();
   }
 
-  filterRequestForApproval(String s, List<User> users) {
-    if (s.isEmpty) {
-      filteredRequests = requests;
-      notifyListeners();
-      return;
-    }
+  filterRequest(String s, List<User> users, String filteredStatus,
+      int? loggedInUserId, bool isAdmin) {
     filteredRequests = [];
 
     List<String> matchingUserIds =
@@ -60,12 +55,24 @@ class RequestProvider extends ProviderBase {
     var filteredMedicines = AppDataContext.filterMedicinesByKeyword(s);
     // Obtain a Set of the keys for quick lookup.
     var filteredMedicineIds = filteredMedicines.keys.toSet();
-
     for (var req in requests) {
-      if (filteredMedicineIds.contains(req.medRequestId) ||
-          s.contains(req.reasonRequest) ||
-          matchingUserIds.contains(req.userId.toString())) {
-        filteredRequests.add(req);
+      String status = req.isApprove == null
+          ? "PENDING"
+          : req.isApprove!
+              ? "APPROVED"
+              : "REJECTED";
+
+      if (status == filteredStatus &&
+          (filteredMedicineIds.contains(req.medRequestId) ||
+              s.contains(req.reasonRequest) ||
+              matchingUserIds.contains(req.userId.toString()))) {
+        if (!isAdmin) {
+          if (loggedInUserId != null && req.userId == loggedInUserId) {
+            filteredRequests.add(req);
+          }
+        } else {
+          filteredRequests.add(req);
+        }
 
         notifyListeners();
       }

@@ -16,14 +16,14 @@ class ToolBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           const FaIcon(
             FontAwesomeIcons.capsules,
-            size: 22,
+            size: 16,
             color: AppColors.font2,
           ),
           const SizedBox(width: 8),
           Text(
             title ?? "",
             style: const TextStyle(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.w400,
               color: AppColors.font2,
             ),

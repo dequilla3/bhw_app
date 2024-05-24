@@ -31,6 +31,10 @@ class UserProvider extends ProviderBase {
     return users.firstWhere((element) => element.id == id);
   }
 
+  User getLoggedUser() {
+    return users.firstWhere((element) => element.id == loggedInUserId);
+  }
+
   Future<Map<String, dynamic>> addUser(User user) async {
     return await AddUserService(user: user).call();
   }

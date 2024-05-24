@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+const List<String> list = <String>['PENDING', 'APPROVED', 'REJECTED'];
+
 class RequestApprovalPage extends StatefulWidget {
   const RequestApprovalPage({super.key});
 
@@ -19,10 +21,10 @@ class RequestApprovalPage extends StatefulWidget {
 class _RequestApprovalPageState extends State<RequestApprovalPage> {
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
-
+  String dropdownValue = list.first;
   ScrollController? scrollController;
 
-  Future<void> _loadPendingRequests() async {
+  Future<void> _loadRequests() async {
     context
         .read<UserProvider>()
         .getUsers()
@@ -31,14 +33,14 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
 
   void scrollListener() {
     if (scrollController!.position.extentAfter < 500) {
-      _loadPendingRequests();
+      _loadRequests();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _loadPendingRequests();
+    _loadRequests();
   }
 
   @override
@@ -77,9 +79,10 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => _loadPendingRequests(),
+        onRefresh: () => _loadRequests(),
         child: Consumer<RequestProvider>(
           builder: (context, reqProvider, child) {
+            var users = userProvider.filterUserByName(searchController.text);
             return SizedBox(
               width: screenWidth,
               height: screenHeight,
@@ -87,22 +90,48 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 50,
-                      width: screenWidth,
-                      child: AppTextField(
-                        hint: "Search . . .",
-                        controller: searchController,
-                        focusNode: searchFocus,
-                        onChange: (value) {
-                        
-                          var users = userProvider
-                              .filterUserByName(searchController.text);
-
-                          reqProvider.filterRequestForApproval(
-                              searchController.text, users);
-                        },
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: AppTextField(
+                            hint: "Search . . .",
+                            controller: searchController,
+                            focusNode: searchFocus,
+                            onChange: (value) {
+                              reqProvider.filterRequest(
+                                  searchController.text,
+                                  users,
+                                  dropdownValue,
+                                  context.read<UserProvider>().loggedInUserId!,
+                                  true);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        DropdownMenu<String>(
+                          initialSelection: list.first,
+                          onSelected: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              dropdownValue = value!;
+                              reqProvider.filterRequest(
+                                  searchController.text,
+                                  users,
+                                  dropdownValue,
+                                  context.read<UserProvider>().loggedInUserId!,
+                                  true);
+                            });
+                          },
+                          dropdownMenuEntries: list
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                value: value, label: value);
+                          }).toList(),
+                          width: screenWidth / 3,
+                          textStyle: const TextStyle(fontSize: 9),
+                        )
+                      ],
                     ),
                   ),
                   Expanded(
@@ -155,7 +184,7 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
                                     .toUpperCase(),
                               ),
                               subtitle: Text(
-                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("")[1]} | ${request.reasonRequest}",
+                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("-")[1]} | ${request.reasonRequest}",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 12,
