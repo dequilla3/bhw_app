@@ -215,7 +215,7 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${AppDataContext.getMedicines()[itemCode]} ",
+                        "${AppDataContext.getMedicines()[itemCode].toString().split("-")[1]} ",
                         style: const TextStyle(
                           fontWeight: FontWeight.w900,
                         ),
