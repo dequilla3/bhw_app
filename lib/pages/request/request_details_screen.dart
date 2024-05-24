@@ -132,7 +132,7 @@ class RequestDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId]}",
+                    AppDataContext.getMedicines()[requestProvider.userRequest!.medRequestId].toString().split("-")[1],
                     style: AppText.header3,
                   ),
                   Text(
