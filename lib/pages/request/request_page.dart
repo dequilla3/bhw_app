@@ -127,7 +127,7 @@ class _RequestPageState extends State<RequestPage> {
                               ),
                               isThreeLine: true,
                               title: Text(
-                                "${AppDataContext.getMedicines()[request.medRequestId]}",
+                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("-")[1]}",
                               ),
                               subtitle: Text(
                                 request.reasonRequest,
