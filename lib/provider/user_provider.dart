@@ -7,12 +7,15 @@ import 'package:bhw_app/provider/provider_base.dart';
 
 class UserProvider extends ProviderBase {
   List<User> users = [];
+  User? loggedUser;
   int? loggedInUserId;
 
   Future<List<User>> getUsers() async {
     var res = await GetUserService().call();
     users = [];
     users.addAll(res);
+
+    loggedUser = getLoggedUser();
 
     notifyListeners();
 

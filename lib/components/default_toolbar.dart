@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultToolBar({super.key, this.title, required this.user});
+  const DefaultToolBar({super.key, this.title, this.user});
   final String? title;
-  final User user;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
                           size: 16,
                         ),
                       ),
-                      Text("${user.firstName} ${user.lastName}".toUpperCase())
+                      Text("User".toUpperCase())
                     ],
                   ),
                 ),

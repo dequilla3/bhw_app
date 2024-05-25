@@ -184,7 +184,7 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
                                     .toUpperCase(),
                               ),
                               subtitle: Text(
-                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("-")[1]} | ${request.reasonRequest}",
+                                "${AppDataContext.getMedicines()[request.medRequestId].toString().split("-")[1]} | ${request.reasonRequest} | ${request.dateRequest?.split("T")[0]}",
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 12,

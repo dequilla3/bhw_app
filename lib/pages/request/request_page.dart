@@ -78,9 +78,8 @@ class _RequestPageState extends State<RequestPage> {
     }
 
     return Scaffold(
-      appBar: DefaultToolBar(
+      appBar: const DefaultToolBar(
         title: "My Requests",
-        user: context.read<UserProvider>().getLoggedUser(),
       ),
       body: RefreshIndicator(
         onRefresh: () => _loadRequest(),

@@ -86,6 +86,15 @@ class _NewRequestModalState extends State<NewRequestModal> {
         EasyLoading.show(status: "Saving new request...");
         try {
           requestProiver.addRequest(userRequest).then((value) {
+            if (value["message"].toString().contains("Limit")) {
+              EasyLoading.dismiss();
+              showAlert(
+                QuickAlertType.error,
+                value["message"],
+                isPop: true,
+              );
+              return;
+            }
             EasyLoading.dismiss();
             Future.delayed(const Duration(seconds: 0), () {
               //loadRequest in showAlert

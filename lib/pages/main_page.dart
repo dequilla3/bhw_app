@@ -18,6 +18,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentPageIndex = 0;
+  String? name;
 
   Future<void> loadUser() async {
     context.read<UserProvider>().getUsers();
@@ -26,16 +27,14 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
     loadUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultToolBar(
+      appBar: const DefaultToolBar(
         title: "ADMIN",
-        user: context.read<UserProvider>().getLoggedUser(),
       ),
       bottomNavigationBar: SizedBox(
         height: 60,

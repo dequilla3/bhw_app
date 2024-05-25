@@ -49,12 +49,14 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
         type: type,
         text: text,
         onConfirmBtnTap: () {
-          if (type == QuickAlertType.error) {
-            Navigator.pop(context);
-            return;
-          }
           Navigator.pop(context);
-          _loadPendingRequests().then((value) => Navigator.pop(context));
+          if (type == QuickAlertType.success) {
+            EasyLoading.show(status: "Please wait . . .");
+            _loadPendingRequests().then((value) {
+              EasyLoading.dismiss();
+              Navigator.pop(context);
+            });
+          }
         },
       );
     });
@@ -78,13 +80,15 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
     }
 
     Future<void> approveRequest() async {
-      int qtyDispense = int.parse(qtyController.text);
-      if (!isStringDigit(qtyController.text)) {
-        showAlert(QuickAlertType.error, "Qty must be number!");
+      if (qtyController.text.isEmpty) {
+        showAlert(QuickAlertType.error, "Qty is required!");
         return;
       }
-      if (explanation == null) {
-        showAlert(QuickAlertType.error, "Explanation is required!");
+
+      int qtyDispense = int.parse(qtyController.text);
+
+      if (!isStringDigit(qtyController.text)) {
+        showAlert(QuickAlertType.error, "Qty must be number!");
         return;
       }
 
@@ -104,9 +108,14 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
             Navigator.pop(context);
             EasyLoading.show(status: "Sending approval...");
             await requestProvider
-                .approveRequest(isApproved: true, explanation: explanation)
+                .approveRequest(
+                    isApproved: true, explanation: explanation ?? "")
                 .then((value) {
               EasyLoading.dismiss();
+              if (value['errorMsg'] != null) {
+                showAlert(QuickAlertType.error, value['errorMsg']);
+                return;
+              }
               EasyLoading.show(status: "Updating stocks. . .");
               context
                   .read<MedicineProvider>()
