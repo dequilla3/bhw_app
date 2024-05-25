@@ -83,14 +83,13 @@ class RequestProvider extends ProviderBase {
           if (!isAdmin) {
             if (loggedInUserId != null && req.userId == loggedInUserId) {
               filteredRequests.add(req);
+              notifyListeners();
             }
-            notifyListeners();
-
             continue;
           }
           filteredRequests.add(req);
+          notifyListeners();
         }
-        notifyListeners();
       }
     }
   }
