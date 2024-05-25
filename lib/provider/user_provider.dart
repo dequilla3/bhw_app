@@ -9,6 +9,7 @@ class UserProvider extends ProviderBase {
   List<User> users = [];
   User? loggedUser;
   int? loggedInUserId;
+  String? userName;
 
   Future<List<User>> getUsers() async {
     var res = await GetUserService().call();
@@ -48,6 +49,7 @@ class UserProvider extends ProviderBase {
 
     if (res['authData'] != null) {
       loggedInUserId = int.parse(res['authData']['user_id']);
+      userName = res['authData']['user_name'].toString();
     }
 
     return res;

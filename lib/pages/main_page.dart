@@ -33,8 +33,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultToolBar(
+      appBar: DefaultToolBar(
         title: "ADMIN",
+        userName: context.read<UserProvider>().userName,
       ),
       bottomNavigationBar: SizedBox(
         height: 60,

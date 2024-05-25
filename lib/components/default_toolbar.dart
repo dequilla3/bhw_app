@@ -1,20 +1,19 @@
 import 'package:bhw_app/components/toolbar.dart';
 import 'package:bhw_app/config/app_routes.dart';
-import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultToolBar({super.key, this.title, this.user});
+  const DefaultToolBar({super.key, this.title, tis, this.userName});
   final String? title;
-  final User? user;
+  final String? userName;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ToolBar(
-        title: title ?? 'B H W',
+        title: title ?? 'B H C',
         actions: [
           PopupMenuButton<Menus>(
             child: const Padding(
@@ -39,7 +38,7 @@ class DefaultToolBar extends StatelessWidget implements PreferredSizeWidget {
                           size: 16,
                         ),
                       ),
-                      Text("User".toUpperCase())
+                      Text(userName!)
                     ],
                   ),
                 ),

@@ -154,8 +154,10 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
                             return ListTile(
                               onTap: () {
                                 reqProvider.userRequest = request;
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.approveRequestPage);
+                                if (status == "PENDING") {
+                                  Navigator.of(context)
+                                      .pushNamed(AppRoutes.approveRequestPage);
+                                }
                               },
                               leading: CircleAvatar(
                                 foregroundColor: Colors.white,
