@@ -1,4 +1,3 @@
-import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/data/model/user.dart';
 import 'package:bhw_app/data/model/user_request.dart';
 import 'package:bhw_app/data/service/request/add_request_service.dart';
@@ -15,7 +14,7 @@ class RequestProvider extends ProviderBase {
     return await AddRequestService(userRequest: uReq).call();
   }
 
-  getUserRequest(int loggedInUserId) async {
+  getUserRequest(int loggedInUserId, String? fstatus) async {
     requests = [];
     filteredRequests = [];
     List<UserRequest> userRequests = await GetUserRequestService().call();
@@ -24,22 +23,36 @@ class RequestProvider extends ProviderBase {
 
     for (var userRequest in userRequests.reversed) {
       if (userRequest.userId == loggedInUserId) {
+        String status = userRequest.isApprove == null
+            ? "PENDING"
+            : userRequest.isApprove!
+                ? "APPROVED"
+                : "REJECTED";
+        if (status == fstatus) {
+          filteredRequests.add(userRequest);
+        }
         requests.add(userRequest);
-        filteredRequests.add(userRequest);
       }
     }
 
     notifyListeners();
   }
 
-  getMedecineRequest() async {
+  getMedecineRequest(String? fstatus) async {
     requests = [];
     filteredRequests = [];
 
     List<UserRequest> userRequests = await GetUserRequestService().call();
     for (var userRequest in userRequests) {
       requests.add(userRequest);
-      filteredRequests.add(userRequest);
+      String status = userRequest.isApprove == null
+          ? "PENDING"
+          : userRequest.isApprove!
+              ? "APPROVED"
+              : "REJECTED";
+      if (status == fstatus) {
+        filteredRequests.add(userRequest);
+      }
     }
     notifyListeners();
   }
@@ -51,10 +64,6 @@ class RequestProvider extends ProviderBase {
     List<String> matchingUserIds =
         users.map((user) => user.id.toString()).toList();
 
-    // Obtain the filtered medicines based on the search term 's'.
-    var filteredMedicines = AppDataContext.filterMedicinesByKeyword(s);
-    // Obtain a Set of the keys for quick lookup.
-    var filteredMedicineIds = filteredMedicines.keys.toSet();
     for (var req in requests) {
       String status = req.isApprove == null
           ? "PENDING"
@@ -62,18 +71,25 @@ class RequestProvider extends ProviderBase {
               ? "APPROVED"
               : "REJECTED";
 
-      if (status == filteredStatus &&
-          (filteredMedicineIds.contains(req.medRequestId) ||
-              s.contains(req.reasonRequest) ||
-              matchingUserIds.contains(req.userId.toString()))) {
-        if (!isAdmin) {
-          if (loggedInUserId != null && req.userId == loggedInUserId) {
-            filteredRequests.add(req);
+      if (s.isEmpty && status == filteredStatus && isAdmin) {
+        filteredRequests.add(req);
+        notifyListeners();
+
+        continue;
+      }
+
+      if (status == filteredStatus) {
+        if (matchingUserIds.contains(req.userId.toString())) {
+          if (!isAdmin) {
+            if (loggedInUserId != null && req.userId == loggedInUserId) {
+              filteredRequests.add(req);
+            }
+            notifyListeners();
+
+            continue;
           }
-        } else {
           filteredRequests.add(req);
         }
-
         notifyListeners();
       }
     }

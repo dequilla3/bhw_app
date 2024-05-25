@@ -30,14 +30,14 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
   @override
   void initState() {
     super.initState();
-    tfFocus.requestFocus();
     _loadPendingRequests();
+    qtyController.text = 3.toString();
   }
 
   Future<void> _loadPendingRequests() async {
     return context.read<UserProvider>().getUsers().then((value) async {
       await context.read<MedicineProvider>().getMedicines().then((value) {
-        return context.read<RequestProvider>().getMedecineRequest();
+        return context.read<RequestProvider>().getMedecineRequest("PENDING");
       });
     });
   }
@@ -51,10 +51,14 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
         onConfirmBtnTap: () {
           Navigator.pop(context);
           if (type == QuickAlertType.success) {
-            EasyLoading.show(status: "Please wait . . .");
+            EasyLoading.dismiss();
+
             _loadPendingRequests().then((value) {
-              EasyLoading.dismiss();
-              Navigator.pop(context);
+              EasyLoading.show(status: "Please wait . . .");
+              Future.delayed(const Duration(seconds: 1), () {
+                EasyLoading.dismiss();
+                Navigator.pop(context);
+              });
             });
           }
         },

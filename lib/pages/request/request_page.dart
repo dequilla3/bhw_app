@@ -1,4 +1,3 @@
-import 'package:bhw_app/components/app_text_field.dart';
 import 'package:bhw_app/components/default_toolbar.dart';
 import 'package:bhw_app/config/app_data_context.dart';
 import 'package:bhw_app/pages/request/new_request_modal.dart';
@@ -32,9 +31,8 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<void> _loadRequest() async {
-    context
-        .read<RequestProvider>()
-        .getUserRequest(context.read<UserProvider>().loggedInUserId!);
+    context.read<RequestProvider>().getUserRequest(
+        context.read<UserProvider>().loggedInUserId!, dropdownValue);
   }
 
   @override
@@ -93,26 +91,7 @@ class _RequestPageState extends State<RequestPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Expanded(
-                            child: AppTextField(
-                              hint: "Search . . .",
-                              controller: searchController,
-                              focusNode: searchFocus,
-                              onChange: (value) {
-                                reqProvider.filterRequest(
-                                    searchController.text,
-                                    users,
-                                    dropdownValue,
-                                    context
-                                        .read<UserProvider>()
-                                        .loggedInUserId!,
-                                    false);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 4),
                           DropdownMenu<String>(
                             initialSelection: list.first,
                             onSelected: (String? value) {
@@ -136,7 +115,8 @@ class _RequestPageState extends State<RequestPage> {
                             }).toList(),
                             width: screenWidth / 3,
                             textStyle: const TextStyle(fontSize: 9),
-                          )
+                          ),
+                          const SizedBox(width: 4)
                         ],
                       ),
                     ),

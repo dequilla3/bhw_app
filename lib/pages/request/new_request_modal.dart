@@ -27,9 +27,8 @@ class _NewRequestModalState extends State<NewRequestModal> {
   int dropdownValue = 1;
 
   Future<void> _loadRequest() async {
-    context
-        .read<RequestProvider>()
-        .getUserRequest(context.read<UserProvider>().loggedInUserId!);
+    context.read<RequestProvider>().getUserRequest(
+        context.read<UserProvider>().loggedInUserId!, "PENDING");
   }
 
   showAlert(QuickAlertType type, String text, {bool isPop = false}) {

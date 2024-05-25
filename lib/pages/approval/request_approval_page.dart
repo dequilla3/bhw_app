@@ -25,10 +25,8 @@ class _RequestApprovalPageState extends State<RequestApprovalPage> {
   ScrollController? scrollController;
 
   Future<void> _loadRequests() async {
-    context
-        .read<UserProvider>()
-        .getUsers()
-        .then((value) => context.read<RequestProvider>().getMedecineRequest());
+    context.read<UserProvider>().getUsers().then((value) =>
+        context.read<RequestProvider>().getMedecineRequest(dropdownValue));
   }
 
   void scrollListener() {
